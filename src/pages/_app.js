@@ -17,6 +17,7 @@ const App = ({ Component, pageProps }) => {
 
 
   return (
+    mounted &&
     <>
       <GlobalStyle />
       <Head>
