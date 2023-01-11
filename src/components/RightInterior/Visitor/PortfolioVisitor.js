@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import styled from 'styled-components';
 
 const PortfolioVisitor = ({ content }) => {
@@ -32,7 +33,7 @@ const PortfolioVisitor = ({ content }) => {
             <p>: {content.range}</p>
             <br />
 
-            {content.img && <Img src={content.img} alt={content.title} />}
+            {content.img && <Image src={content.img} alt={content.title} width={320} height={180} className="img" />}
             <br />
 
             <Row>
@@ -86,13 +87,14 @@ const Div = styled.div`
     & > p {
         line-height : 20px;
     }
+
+    .img {
+        width : 320px;
+        border : 1px solid rgba(0,0,0,0.3);
+        box-shadow: 5px 5px 5px rgb(0,0,0,0.3);
+    }
 `;
 
-const Img = styled.img`
-    width : 320px;
-    border : 1px solid rgba(0,0,0,0.3);
-    box-shadow: 5px 5px 5px rgb(0,0,0,0.3);
-`;
 
 const Row = styled.div`
     display : flex;

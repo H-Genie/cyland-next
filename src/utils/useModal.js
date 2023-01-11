@@ -20,7 +20,7 @@ const customStyles = {
         maxWidth: 1280,
         maxHeight: '80%',
         width: 'fit-content',
-        height: 'fit-content'
+        height: 'fit-content',
     },
 };
 
