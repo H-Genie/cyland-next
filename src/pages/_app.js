@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Head from 'next/head';
 import GlobalStyle from '../style/GlobalStyle'
 import Image from 'next/image';
@@ -8,16 +8,9 @@ import Navigator from '../components/RightInterior/Navigator';
 import { setPathname } from '../utils/selectColor';
 
 const App = ({ Component, pageProps }) => {
-  const [mounted, setMounted] = useState(false)
-  mounted && setPathname()
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
+  setPathname()
 
   return (
-    mounted &&
     <>
       <GlobalStyle />
       <Head>

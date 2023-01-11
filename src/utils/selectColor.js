@@ -8,22 +8,24 @@ export const selectColor = (param) => {
 }
 
 export const setPathname = () => {
-    setTimeout(() => {
-        switch (window.location.pathname) {
-            case "/":
-                selectColor(0);
-                break;
-            case "/resume":
-                selectColor(1);
-                break;
-            case "/portfolio":
-                selectColor(2);
-                break;
-            case "/story":
-                selectColor(3);
-                break;
-            default:
-                break;
-        }
-    }, 100)
+    if (typeof window === "object") {
+        setTimeout(() => {
+            switch (window.location.pathname) {
+                case "/":
+                    selectColor(0);
+                    break;
+                case "/resume":
+                    selectColor(1);
+                    break;
+                case "/portfolio":
+                    selectColor(2);
+                    break;
+                case "/story":
+                    selectColor(3);
+                    break;
+                default:
+                    break;
+            }
+        }, 100)
+    }
 }
