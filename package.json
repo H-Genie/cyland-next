@@ -1,0 +1,19 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "next",
+        "build": "next build",
+        "start": "next start",
+        "vercel-deploy": "next build && next export"
+    },
+    "dependencies": {
+        "firebase": "8.6.7",
+        "next": "latest",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-modal": "^3.16.1",
+        "react-slick": "^0.29.0",
+        "slick-carousel": "^1.8.1",
+        "styled-components": "^5.3.5"
+    }
+}
