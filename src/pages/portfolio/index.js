@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import { Section } from '../../style/Router';
 import Visitor from '../../components/RightInterior/Visitor/Visitor';
-import * as contents from '../../Components/RightInterior/contents/portfolioContents';
+import * as contents from '../../components/RightInterior/contents/portfolioContents';
 import { CarouselPortfolio } from '../../utils/useCarousel';
 
 const Portfolio = () => {

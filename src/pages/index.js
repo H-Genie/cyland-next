@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head';
 import Image from 'next/image';
-import CommentContainer from '../Components/RightInterior/Home/CommentContainer';
+import CommentContainer from '../components/RightInterior/Home/CommentContainer';
 
 const index = () => {
   return (

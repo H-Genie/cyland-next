@@ -3,8 +3,8 @@ import Head from 'next/head';
 import GlobalStyle from '../style/GlobalStyle'
 import Image from 'next/image';
 import styled from 'styled-components'
-import CylandLeft from '../Components/CylandLeft';
-import Navigator from '../Components/RightInterior/Navigator';
+import CylandLeft from '../components/CylandLeft';
+import Navigator from '../components/RightInterior/Navigator';
 import { setPathname } from '../utils/selectColor';
 
 const App = ({ Component, pageProps }) => {
