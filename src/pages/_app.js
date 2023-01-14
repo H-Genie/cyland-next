@@ -1,8 +1,9 @@
 import React from 'react'
 import Head from 'next/head';
-import GlobalStyle from '../style/GlobalStyle'
 import Image from 'next/image';
 import styled from 'styled-components'
+
+import GlobalStyle from '../style/GlobalStyle'
 import CylandLeft from '../components/CylandLeft';
 import Navigator from '../components/RightInterior/Navigator';
 import { setPathname } from '../utils/selectColor';
