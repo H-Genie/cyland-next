@@ -17,13 +17,13 @@ class Portfolio {
 export const cyland = new Portfolio(
     "【 Front-end Development 】",
     "CYLAND",
-    "React, Firebase",
+    "React, Firebase, Next.js",
     "현재 사이트 (포트폴리오 소개)",
-    "React Router, Styled Component, Firestore 데이터베이스, OOP",
+    "Sever Side Rendering, Styled Component, Firestore 데이터베이스, OOP",
     "메인 컴포넌트 + 라우터 컴포넌트 3",
     "/images/portfolio/cyland.jpg",
     {
-        코드: "https://github.com/H-Genie/cyland"
+        코드: "https://github.com/H-Genie/cyland-next"
     }
 )
 
