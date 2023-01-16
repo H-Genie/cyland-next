@@ -15,6 +15,19 @@ const App = ({ Component, pageProps }) => {
     <>
       <GlobalStyle />
       <Head>
+        <meta name="google-site-verification" content="EopT8_hzyTbvtdBH05WxfhQ8ZQRb1GJipuVdulEh7t8" />
+        <meta name="naver-site-verification" content="d37431be99e979a0e5f7cf5292765e1fb823a7ce" />
+
+        <meta name="author" content="H-Genie" />
+        <meta name="description" content="프론트엔드 개발자 서형진의 포트폴리오입니다. HTML, CSS , JavaScript, React, Node.Js, 지니닷컴, H-Genie" />
+        <meta name="keywords" content="서형진의 포트폴리오, 지니닷컴, H-Genie, 프론트엔드 포트폴리오, 자바스크립트, 리액트, Node.js, Frontend Portfolio" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="H-Genie.com" />
+        <meta property="og:url" content="https://h-genie.com" />
+        <meta property="og:title" content="H-Genie.com" />
+        <meta property="og:description" content="프론트엔드 개발자 서형진의 포트폴리오입니다. HTML, CSS , JavaScript, React, Node.Js, 지니닷컴, H-Genie" />
+        <meta property="og:image" content="/images/og-iamge.jpg" />
         <title>H-Genie.com</title>
       </Head>
       <Container>
