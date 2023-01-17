@@ -19,7 +19,7 @@ export const cyland = new Portfolio(
     "CYLAND",
     "React, Firebase, Next.js",
     "현재 사이트 (포트폴리오 소개)",
-    "Sever Side Rendering, Styled Component, Firestore 데이터베이스, OOP",
+    "Sever Side Rendering, Styled Component, Firestore 데이터베이스",
     "메인 컴포넌트 + 라우터 컴포넌트 3",
     "/images/portfolio/cyland.jpg",
     {

@@ -2,7 +2,19 @@ import React from 'react';
 import Head from 'next/head';
 import { Section } from '../../style/Router';
 import Visitor from '../../components/RightInterior/Visitor/Visitor';
-import * as contents from '../../components/RightInterior/contents/portfolioContents';
+import {
+  cyland,
+  pagination,
+  pokemon,
+  movieapp,
+  todo,
+  genesis,
+  flag,
+  huge,
+  netflix,
+  naver,
+  vom
+} from '../../components/RightInterior/contents/portfolioContents'
 import { CarouselPortfolio } from '../../utils/useCarousel';
 
 const Portfolio = () => {
@@ -19,11 +31,24 @@ const Portfolio = () => {
     </>
   );
 
+  const map = new Map();
+  map.set(1, cyland);
+  map.set(2, pagination);
+  map.set(3, pokemon);
+  map.set(4, movieapp);
+  map.set(5, todo);
+  map.set(6, genesis);
+  map.set(7, flag);
+  map.set(8, huge);
+  map.set(9, netflix);
+  map.set(10, naver);
+  map.set(11, vom);
+
   return (
     <Section>
       <Visitor no={0} content={notice} notice={true} />
       {
-        Object.values(contents).map((portfolio, index) => (
+        [...map.values()].map((portfolio, index) => (
           <Visitor
             key={index + 1}
             no={index + 1}
