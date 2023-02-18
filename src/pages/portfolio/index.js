@@ -1,7 +1,7 @@
-import React from 'react';
-import Head from 'next/head';
-import { Section } from 'style/Router';
-import Visitor from 'components/RightInterior/Visitor/Visitor';
+import React from "react";
+import Head from "next/head";
+import { Section } from "style/Router";
+import Visitor from "components/RightInterior/Visitor/Visitor";
 import {
   cyland,
   pagination,
@@ -13,19 +13,25 @@ import {
   huge,
   netflix,
   naver,
-  vom
-} from 'components/RightInterior/contents/portfolioContents'
-import { CarouselPortfolio } from 'utils/useCarousel';
+  vom,
+} from "components/RightInterior/contents/portfolioContents";
+import { CarouselPortfolio } from "utils/useCarousel";
 
 const Portfolio = () => {
   const notice = (
     <>
       <Head>
-        <meta name="description" content="프론트엔드 포트폴리오, 리액트 포트폴리오, 퍼블리싱 포트폴리오, 자바스크립트 포트폴리오, HTML 포트폴리오, CSS 포트폴리오, HTML, CSS, JavaScript, React, Node.js, Next.js" />
+        <meta
+          name="description"
+          content="프론트엔드 포트폴리오, 리액트 포트폴리오, 퍼블리싱 포트폴리오, 자바스크립트 포트폴리오, HTML 포트폴리오, CSS 포트폴리오, HTML, CSS, JavaScript, React, Node.js, Next.js"
+        />
         <title>Portfolio</title>
       </Head>
       <br />
-      <p>풀스택 프로젝트 1개, 프론트엔드 프로젝트 4개, 퍼블리싱 프로젝트 5개, 실무 1개, </p>
+      <p>
+        풀스택 프로젝트 1개, 프론트엔드 프로젝트 4개, 퍼블리싱 프로젝트 5개,
+        실무 1개,{" "}
+      </p>
       <br />
       <CarouselPortfolio />
       <br />
@@ -48,18 +54,16 @@ const Portfolio = () => {
   return (
     <Section>
       <Visitor no={0} content={notice} notice={true} />
-      {
-        [...map.values()].map((portfolio, index) => (
-          <Visitor
-            key={index + 1}
-            no={index + 1}
-            content={portfolio}
-            type={"portfolio"}
-          />
-        ))
-      }
+      {[...map.values()].map((portfolio, index) => (
+        <Visitor
+          key={index + 1}
+          no={index + 1}
+          content={portfolio}
+          type={"portfolio"}
+        />
+      ))}
     </Section>
-  )
-}
+  );
+};
 
 export default Portfolio;

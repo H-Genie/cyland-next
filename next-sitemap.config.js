@@ -2,4 +2,4 @@
 module.exports = {
   siteUrl: "https://h-genie.com",
   generateRobotsTxt: true,
-}
+};
