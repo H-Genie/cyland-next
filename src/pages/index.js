@@ -1,7 +1,6 @@
 import React from 'react'
 import Head from 'next/head';
-import Image from 'next/image';
-import CommentContainer from '../components/RightInterior/Home/CommentContainer';
+import CommentContainer from 'components/RightInterior/Home/CommentContainer';
 
 const index = () => {
   return (
@@ -9,7 +8,7 @@ const index = () => {
       <Head>
         <title>H-Genie.com</title>
       </Head>
-      <Image src={"/images/miniroom.jpg"} alt="miniroom" width={747} height={346} style={{ marginBottom: 10 }} />
+      <img src={"/images/miniroom.jpg"} alt="miniroom" style={{ marginBottom: 10, width: '100%', height: 350 }} />
       <CommentContainer />
     </>
   )

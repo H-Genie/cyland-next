@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import styled from 'styled-components';
 
 const PortfolioVisitor = ({ content }) => {
@@ -7,10 +6,10 @@ const PortfolioVisitor = ({ content }) => {
         <Div>
             <br />
 
-            <h6>{content.classification}</h6>
+            <h6 style={{ color: '#B88181' }}>{content.classification}</h6>
             <br />
 
-            <h4>{content.title}</h4>
+            <Title>{content.title}</Title>
             <br />
 
             <h6>{content.language}</h6>
@@ -25,15 +24,15 @@ const PortfolioVisitor = ({ content }) => {
 
             <br />
 
-            <p>{`<주요 학습 내용>`}</p>
+            <SubColor>{`<주요 학습 내용>`}</SubColor>
             <p>: {content.study}</p>
             <br />
 
-            <p>{`<작업 범위>`}</p>
+            <SubColor>{`<작업 범위>`}</SubColor>
             <p>: {content.range}</p>
             <br />
 
-            {content.img && <Image src={content.img} alt={content.title} width={320} height={180} className="img" />}
+            {content.img && <img src={content.img} alt={content.title} className="img" />}
             <br />
 
             <Row>
@@ -103,3 +102,11 @@ const Row = styled.div`
 const Space = styled.span`
     width : 15px;
 `;
+
+const Title = styled.h4`
+    color: #6E9BB8;
+`
+
+const SubColor = styled.p`
+    color: #B88181;
+`

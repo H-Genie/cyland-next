@@ -1,7 +1,6 @@
 import React from 'react';
-import Image from 'next/image';
 import styled from 'styled-components';
-import { CarouselStory } from '../../../utils/useCarousel';
+import { CarouselStory } from 'utils/useCarousel';
 
 const P = styled.p`
     font-family : 'SCDream3';
@@ -130,9 +129,9 @@ export const story3 = (
             빨리 코로나가 종식되어, 많은 사람들과 만나서 함께 달리고 싶습니다.
         </P>
         <Running>
-            <Image src={"/images/story/running1.jpg"} width={160} height={160} alt="running" />
-            <Image src={"/images/story/running2.jpg"} width={160} height={160} alt="running" />
-            <Image src={"/images/story/running3.jpg"} width={160} height={160} alt="running" />
+            <img src={"/images/story/running1.jpg"} alt="running" />
+            <img src={"/images/story/running2.jpg"} alt="running" />
+            <img src={"/images/story/running3.jpg"} alt="running" />
         </Running>
         <br />
         <P>

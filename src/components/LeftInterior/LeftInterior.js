@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import Image from 'next/image';
 import Today from './sections/Today';
 import Message from './sections/Message';
 import Name from './sections/Name';
@@ -15,7 +14,7 @@ const LeftInterior = () => {
             <Ring />
 
             <Today />
-            <Image src="/images/profile.jpg" alt="profile" width={247} height={247} style={{ marginTop: '10px' }} />
+            <img src="/images/profile.jpg" alt="profile" style={{ width: '100%', marginTop: '10px' }} />
             <Message />
             <Name />
             <PortfolioSelect />

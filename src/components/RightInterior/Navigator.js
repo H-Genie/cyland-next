@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
-import { selectColor } from '../../utils/selectColor';
+import { selectColor } from 'utils/selectColor';
 
 const Navigator = () => {
     return (
@@ -36,6 +36,14 @@ const Navigator = () => {
                     onClick={() => selectColor(3)}
                 >
                     Story
+                </Ribbon>
+            </Link>
+            <Link href={'/visitor'}>
+                <Ribbon
+                    id="ribbon4"
+                    onClick={() => selectColor(4)}
+                >
+                    Visitor
                 </Ribbon>
             </Link>
         </Nav>

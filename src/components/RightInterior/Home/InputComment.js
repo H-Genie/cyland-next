@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { setComment } from '../../../utils/crudComment';
+import { setComment } from 'utils/crudComment';
 
 const InputComment = () => {
     const toggleBottom = () => {

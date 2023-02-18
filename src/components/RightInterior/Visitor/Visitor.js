@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 import styled from 'styled-components';
 import PortfolioVisitor from './PortfolioVisitor';
 
@@ -21,7 +20,7 @@ const Visitor = ({ no, content, notice, type }) => {
                     </p>
                 </div>
                 <div className="bottom">
-                    <Image src={'/images/minimi.jpg'} alt="profile" width={170} height={170} className="profile" />
+                    <img src={'/images/minimi.jpg'} alt="profile" className="profile" />
                     <div className="content">
                         {type ? <PortfolioVisitor content={content} /> : content}
                     </div>

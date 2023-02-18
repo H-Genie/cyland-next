@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
-import { Section } from '../../style/Router';
-import Visitor from '../../components/RightInterior/Visitor/Visitor';
+import { Section } from 'style/Router';
+import Visitor from 'components/RightInterior/Visitor/Visitor';
 import {
   cyland,
   pagination,
@@ -14,13 +14,14 @@ import {
   netflix,
   naver,
   vom
-} from '../../components/RightInterior/contents/portfolioContents'
-import { CarouselPortfolio } from '../../utils/useCarousel';
+} from 'components/RightInterior/contents/portfolioContents'
+import { CarouselPortfolio } from 'utils/useCarousel';
 
 const Portfolio = () => {
   const notice = (
     <>
       <Head>
+        <meta name="description" content="프론트엔드 포트폴리오, 리액트 포트폴리오, 퍼블리싱 포트폴리오, 자바스크립트 포트폴리오, HTML 포트폴리오, CSS 포트폴리오, HTML, CSS, JavaScript, React, Node.js, Next.js" />
         <title>Portfolio</title>
       </Head>
       <br />

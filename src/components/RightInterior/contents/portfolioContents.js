@@ -1,5 +1,5 @@
-import { ModalHuge, ModalFlag, ModalVom } from '../../../utils/useModal';
-import { selectOptions as page } from '../../LeftInterior/sections/PortfolioSelect';
+import { ModalHuge, ModalFlag, ModalVom } from 'utils/useModal';
+import { selectOptions as page } from 'components/LeftInterior/sections/PortfolioSelect';
 
 class Portfolio {
     constructor(classification, title, language, description, study, range, img, link) {
@@ -18,9 +18,9 @@ export const cyland = new Portfolio(
     "【 Front-end Development 】",
     "CYLAND",
     "React, Firebase, Next.js",
-    "현재 사이트 (포트폴리오 소개)",
+    "현재 사이트 (포트폴리오 소개) \n 검색엔진 등록 (구글, 네이버, 다음)",
     "Sever Side Rendering, Styled Component, Firestore 데이터베이스",
-    "메인 컴포넌트 + 라우터 컴포넌트 3",
+    "메인 컴포넌트 + 라우터 4",
     "/images/portfolio/cyland.jpg",
     {
         코드: "https://github.com/H-Genie/cyland-next"

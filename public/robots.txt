@@ -1,3 +1,9 @@
+# *
 User-agent: *
 Allow: /
+
+# Host
+Host: https://h-genie.com
+
+# Sitemaps
 Sitemap: https://h-genie.com/sitemap.xml

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import Image from 'next/image';
 import styled from 'styled-components';
-import { db } from '../../../utils/firebase';
-import { checkUpdate, checkDelete, deleteComment } from '../../../utils/crudComment';
+import { db } from 'utils/firebase';
+import { checkUpdate, checkDelete, deleteComment } from 'utils/crudComment';
 
 const Comments = ({ comment }) => {
     const [editing, setEditing] = useState(false);
@@ -70,18 +69,14 @@ const Comments = ({ comment }) => {
                                 <Button><p>확인</p></Button>
                             </Form>
 
-                            <Image
+                            <img
                                 src="/images/edit.svg"
                                 alt="edit"
-                                width={16}
-                                height={16}
                                 onClick={() => checkUpdate(comment.id)}
                             />
-                            <Image
+                            <img
                                 src="/images/delete.svg"
                                 alt="delete"
-                                width={16}
-                                height={16}
                                 onClick={() => checkDelete(comment.id)}
                             />
                         </Figure>

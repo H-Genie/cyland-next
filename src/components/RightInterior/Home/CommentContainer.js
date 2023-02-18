@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useFirestore } from '../../../utils/useFirestore';
+import { useFirestore } from 'utils/useFirestore';
 import InputComment from './InputComment';
 import Comments from './Comments';
 
