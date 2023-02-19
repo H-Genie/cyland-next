@@ -47,6 +47,7 @@ export const pagination = new Portfolio(
   {
     포트폴리오: page[1].value,
     코드: "https://github.com/H-Genie/pagination",
+    swagger: "https://myapi-h-genie.koyeb.app/docs"
   }
 );
 
