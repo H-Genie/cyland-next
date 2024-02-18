@@ -1,5 +1,5 @@
 export const selectColor = (param) => {
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 4; i++) {
     document.getElementById(`ribbon${i}`).classList.remove("selected");
   }
   document.getElementById(`ribbon${param}`).classList.add("selected");
@@ -23,9 +23,9 @@ export const setPathname = () => {
         case "/story":
           selectColor(3);
           break;
-        case "/visitor":
-          selectColor(4);
-          break;
+        // case "/visitor":
+        //   selectColor(4);
+        //   break;
         default:
           break;
       }

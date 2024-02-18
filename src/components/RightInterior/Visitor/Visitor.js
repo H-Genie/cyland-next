@@ -16,11 +16,11 @@ const Visitor = ({ no, content, notice, type }) => {
           <p>
             <span>NO. {no}</span>
             서형진
-            <span>( {now} )</span>
+            <span>{now}</span>
           </p>
         </div>
         <div className="bottom">
-          <img src={"/images/minimi.jpg"} alt="profile" className="profile" />
+          <img src={"/images/minimi-1.jpg"} alt="profile" className="profile" />
           <div className="content">
             {type ? <PortfolioVisitor content={content} /> : content}
           </div>
@@ -44,7 +44,7 @@ const Cyworld = styled.div`
     display: flex;
     align-items: center;
     background-color: ${(props) =>
-      props.notice === true ? "rgb(255,238,210)" : "#f1f1f1"};
+    props.notice === true ? "rgb(255,238,210)" : "#f1f1f1"};
 
     p {
       font-size: 16px;
@@ -74,6 +74,9 @@ const Cyworld = styled.div`
   .profile {
     width: 170px;
     height: 170px;
+    padding: 16px;
+    border-radius: 32px;
+    margin-top: 4px;
   }
 
   .content {

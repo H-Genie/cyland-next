@@ -5,7 +5,7 @@ import Visitor from "components/RightInterior/Visitor/Visitor";
 import {
   cyland,
   pagination,
-  pokemon,
+  // pokemon,
   movieapp,
   todo,
   genesis,
@@ -29,7 +29,7 @@ const Portfolio = () => {
       </Head>
       <br />
       <p>
-        풀스택 프로젝트 1개, 프론트엔드 프로젝트 4개, 퍼블리싱 프로젝트 5개,
+        풀스택 프로젝트 1개, 프론트엔드 프로젝트 3개, 퍼블리싱 프로젝트 5개,
         실무 1개,{" "}
       </p>
       <br />
@@ -41,7 +41,7 @@ const Portfolio = () => {
   const map = new Map();
   map.set(1, cyland);
   map.set(2, pagination);
-  map.set(3, pokemon);
+  // map.set(3, pokemon);
   map.set(4, movieapp);
   map.set(5, todo);
   map.set(6, genesis);

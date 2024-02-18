@@ -4,7 +4,7 @@ import styled from "styled-components";
 export const selectOptions = [
   { value: "", label: "포트폴리오 파도타기" },
   { value: "https://genie-pagination.onrender.com", label: "Pagination" },
-  { value: "https://genie-pokemon.onrender.com", label: "Pokemon" },
+  // { value: "https://genie-pokemon.onrender.com", label: "Pokemon" },
   { value: "https://genie-movieapp.onrender.com", label: "Movie App" },
   { value: "https://h-genie.github.io/todo", label: "To Do List App" },
   { value: "https://h-genie.github.io/genesis", label: "Genesis" },

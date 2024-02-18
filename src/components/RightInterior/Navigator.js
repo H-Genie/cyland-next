@@ -26,11 +26,11 @@ const Navigator = () => {
           Story
         </Ribbon>
       </Link>
-      <Link href={"/visitor"}>
+      {/* <Link href={"/visitor"}>
         <Ribbon id="ribbon4" onClick={() => selectColor(4)}>
           Visitor
         </Ribbon>
-      </Link>
+      </Link> */}
     </Nav>
   );
 };
