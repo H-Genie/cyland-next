@@ -1,25 +1,38 @@
 {
+  "name": "cyland-next-ts",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next",
-    "build": "next build",
     "start": "next start",
-    "vercel-deploy": "next build && next export",
-    "postbuild": "next-sitemap",
-    "prettier-fix": "prettier --write ."
+    "dev": "next dev",
+    "build": "next build",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
-    "firebase": "8.6.7",
-    "next": "latest",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@noonnu/s-core-dream-3-light": "^0.1.0",
+    "@noonnu/s-coredream-4regular": "^0.0.1",
+    "@noonnu/s-coredream-5medium": "^0.0.1",
+    "@noonnu/s-coredream-6bold": "^0.0.1",
+    "@noonnu/s-coredream-7extrabold": "^0.0.1",
+    "@noonnu/s-coredream-8heavy": "^0.0.1",
+    "@noonnu/s-coredream-9black": "^0.0.1",
+    "firebase": "^10.12.2",
+    "next": "14.1.0",
+    "react": "^18",
+    "react-dom": "^18",
     "react-modal": "^3.16.1",
-    "react-slick": "^0.29.0",
-    "slick-carousel": "^1.8.1",
-    "styled-components": "^5.3.5"
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
-    "next-sitemap": "^3.1.52",
-    "prettier": "^2.8.4"
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/react-modal": "^3.16.3",
+    "@types/react-slick": "^0.23.13",
+    "prettier": "^3.2.5",
+    "typescript": "^5"
   }
 }
