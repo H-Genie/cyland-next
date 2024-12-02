@@ -25,6 +25,11 @@ export default function Portfolio() {
                 5개, 실무 1개
               </p>
               <br />
+              <p style={{ fontSize: 12 }}>
+                (일부 포트폴리오는 server sleep으로 인해 접속시간이 오래 걸릴수
+                있으니 양해바랍니다)
+              </p>
+              <br />
               <MakePortfolioCarousel />
             </>
           }
