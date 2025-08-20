@@ -1,16 +1,16 @@
 import styled from "@emotion/styled";
-import Navigator from "components/RightBody/Navigator";
+import Navigator from "components/RightBody/common/Navigator";
 
 export default function RightInterior({
-  appComponent
+  children
 }: {
-  appComponent: React.ReactNode;
+  children: React.ReactNode;
 }) {
   return (
     <Interior>
       <h5>ⓦelcømё て♡ GЁЙIЭĿÅПÐ ~~♬</h5>
       <Navigator />
-      {appComponent}
+      {children}
     </Interior>
   );
 }

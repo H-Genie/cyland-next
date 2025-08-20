@@ -1,3 +1,4 @@
+"use client";
 import CommentContainer from "components/RightBody/MainSection/CommentContainer";
 
 export default function Main() {

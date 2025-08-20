@@ -11,7 +11,6 @@ export default function LeftInterior() {
       <Ring />
       <Ring />
       <Ring />
-
       <Today />
       <img
         src="/images/profile.jpg"

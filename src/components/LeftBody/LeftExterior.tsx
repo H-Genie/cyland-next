@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import LeftInterior from "./LeftInterior";
 
-export default function LeftExteror() {
+export default function LeftExterior() {
   return (
     <Exterior>
       <LeftInterior />

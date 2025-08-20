@@ -1,6 +1,6 @@
 import { Settings } from "react-slick";
 import { portfolio } from "constants/portfolios";
-import Carousel from "../Carousel";
+import Carousel from "../common/Carousel";
 
 export default function MakePortfolioCarousel() {
   const sliderContents = portfolio.map(item => (

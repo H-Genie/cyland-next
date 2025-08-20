@@ -1,21 +1,20 @@
 "use client";
 import styled from "@emotion/styled";
-import LeftExteror from "./LeftBody/LeftExterior";
+import RightExterior from "./RightBody/RightExterior";
 
-export default function LeftBody() {
+export default function RightBody({ children }: { children: React.ReactNode }) {
   return (
     <Body>
-      <LeftExteror />
+      <RightExterior>{children}</RightExterior>
     </Body>
   );
 }
 
 const Body = styled.div`
-  width: 30%;
+  width: 70%;
   height: 100%;
   background-color: #85c8f2;
   border-radius: 20px;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
 `;

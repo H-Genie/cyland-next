@@ -8,7 +8,7 @@ const cyland = new Portfolio(
 );
 const pagination = new Portfolio(
   "Pagination",
-  "https://genie-pagination.onrender.com",
+  "https://github.com/H-Genie/pagination",
   "./images/portfolio/pagination.jpg"
 );
 const movieapp = new Portfolio(
@@ -120,7 +120,7 @@ const todoVisitor = new PortfolioVisitor(
   "React Hook, 상태관리 (Redux-Toolkit), Firestore 데이터베이스, 구글 Authentication",
   "메인 컴포넌트",
   {
-    포트폴리오: todo.link,
+    포트폴리오: movieapp.link,
     코드: "https://github.com/H-Genie/todo"
   }
 );

@@ -1,4 +1,4 @@
-import Carousel from "../Carousel";
+import Carousel from "../common/Carousel";
 import travelLists from "constants/travelLists";
 
 export default function MakeStoryCarousel() {
