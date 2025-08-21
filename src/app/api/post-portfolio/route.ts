@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       `INSERT INTO portfolio (name, link, thumbnail) VALUES ($1, $2, $3)`,
       [name, link, thumbnail]
     );
-    return NextResponse.json(rows);
+    return NextResponse.json(true);
   } catch (err: unknown) {
     return NextResponse.json(false, { status: 500 });
   } finally {
