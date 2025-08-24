@@ -5,7 +5,7 @@ export async function GET() {
   const client = await pool.connect();
   try {
     const { rows } = await client.query(
-      `select id, comment, nickname, created_at from comment`
+      `select id, comment, nickname, created_at from comment order by created_at desc`
     );
     return NextResponse.json(rows);
   } catch (err: unknown) {

@@ -1,15 +1,17 @@
 import styled from "@emotion/styled";
-import { useFirestore } from "hooks/useFirestore";
 import InputComment from "./InputComment";
 import Comments from "./Comments";
+import { useComment } from "hooks/queries/useComment";
 
 const CommentContainer = () => {
-  const comments = useFirestore();
+  const { data: comments, isError, isLoading } = useComment();
 
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error</div>;
   return (
     <CommentsContainer>
       <InputComment />
-      {comments.map(comment => (
+      {comments?.map((comment: any) => (
         <Comments key={comment.id} comment={comment} />
       ))}
     </CommentsContainer>

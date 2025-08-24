@@ -2,7 +2,6 @@
 import { useState } from "react";
 import styled from "@emotion/styled";
 import { deleteComment, updateComment, toggleForm } from "utils";
-import { useComment } from "hooks/queries/useComment";
 
 export const checkUpdate = (id: number) => {
   document.getElementById(`${id}_delete`)!.classList.remove("display");
@@ -17,8 +16,6 @@ export const checkDelete = (id: number) => {
 const Comments = ({ comment }: { [x: string]: any }) => {
   const [editing, setEditing] = useState(false);
   const toggleEditing = () => setEditing(prev => !prev);
-
-  const { data } = useComment();
 
   return (
     <>
@@ -44,7 +41,8 @@ const Comments = ({ comment }: { [x: string]: any }) => {
           <div className="display-flex">
             <Dot />
             <p>
-              {comment.comment} ({comment.nickname}) {comment.date}
+              {comment.comment} ({comment.nickname}){" "}
+              {comment.created_at.substring(0, 10)}
             </p>
           </div>
 
