@@ -1,12 +1,14 @@
 import { Metadata } from "next";
 import Main from "components/Main";
 import GlobalStyle from "../components/GlobalStyle";
+import Providers from "../components/Providers";
 
 export const metadata: Metadata = {
   title: "H-Genie.com",
   description:
     "서형진 포트폴리오, H-Genie.com, 프론트엔드 개발자, frontend developer, 프론트엔드 포트폴리오, frontend portfolio, 리액트 포트폴리오, react portfolio",
   authors: [{ name: "서형진" }],
+  metadataBase: new URL("https://h-genie.com"),
   openGraph: {
     type: "website",
     siteName: "H-Genie.com",
@@ -22,9 +24,9 @@ export const metadata: Metadata = {
     ]
   },
   verification: {
-    google: "EopT8_hzyTbvtdBH05WxfhQ8ZQRb1GJipuVdulEh7t8",
+    google: process.env.GOOGLE_VERIFICATION as string,
     other: {
-      naver: "d37431be99e979a0e5f7cf5292765e1fb823a7ce"
+      naver: process.env.NAVER_VERIFICATION as string
     }
   }
 };
@@ -33,8 +35,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
       <body>
-        <GlobalStyle />
-        <Main>{children}</Main>
+        <Providers>
+          <GlobalStyle />
+          <Main>{children}</Main>
+        </Providers>
       </body>
     </html>
   );
