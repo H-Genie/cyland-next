@@ -3,9 +3,15 @@ import MakePortfolioCarousel from "components/RightBody/PortfolioSection/MakePor
 import MakePortfolioVisitor from "components/RightBody/PortfolioSection/MakePortfolioVisitor";
 import { Route } from "components/RightBody/common/Route";
 import Visitor from "components/RightBody/common/Visitor";
-import { portfoilioVisitor } from "constants/portfolios";
+// import { portfoilioVisitor } from "constants/portfolios";
+import { usePortfolio } from "hooks/queries/usePortfolio";
+import Loader from "styles/Loader";
 
 export default function PortfolioBody() {
+  const { data, isLoading, isError } = usePortfolio();
+
+  if (isLoading) return <Loader.Basic />;
+  if (isError) return <div>에러가 발생했습니다.</div>;
   return (
     <Route>
       <Visitor
@@ -22,7 +28,7 @@ export default function PortfolioBody() {
         }
         notice={true}
       />
-      {portfoilioVisitor.map((visitor, index) => (
+      {data.map((visitor: any, index: any) => (
         <Visitor
           key={index + 1}
           no={index + 1}

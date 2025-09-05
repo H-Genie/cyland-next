@@ -1,4 +1,6 @@
 import styled from "@emotion/styled";
+import JsxParser from "react-jsx-parser";
+import MakePortfolioModal from "./MakePortfolioModal";
 
 interface DataProps {
   data: {
@@ -29,17 +31,17 @@ export default function MakePortfolioVisitor({ data }: DataProps) {
       <br />
       <br />
 
-      {data.description.split("\n").map((line, index) => (
-        <p key={index}>
-          {line}
-          <br />
-        </p>
-      ))}
+      <p style={{ whiteSpace: "pre-line" }}>
+        {data.description.replace(/\\n/g, "\n")}
+      </p>
 
       <br />
 
       <p className="sub-color">{"< 주요 학습 내용 >"}</p>
-      <p> : {data.study}</p>
+      <p style={{ whiteSpace: "pre-line" }}>
+        {" "}
+        : {data.study.replace(/\\n/g, "\n")}
+      </p>
       <br />
 
       <p className="sub-color">{"< 작업 범위 >"}</p>
@@ -51,7 +53,7 @@ export default function MakePortfolioVisitor({ data }: DataProps) {
 
       <div style={{ display: "flex" }}>
         {Object.entries(data.sublink).map(item => {
-          if (typeof item[1] === "string") {
+          if (!item[1].includes("MakePortfolioModal")) {
             return (
               <a
                 key={item[0]}
@@ -62,7 +64,16 @@ export default function MakePortfolioVisitor({ data }: DataProps) {
                 <p>{`< ${item[0]} 보기 >`}</p>
               </a>
             );
-          } else return item[1];
+          } else {
+            return (
+              <div style={{ marginRight: 15 }}>
+                <JsxParser
+                  jsx={item[1]}
+                  components={{ MakePortfolioModal: MakePortfolioModal as any }}
+                />
+              </div>
+            );
+          }
         })}
       </div>
     </Container>
