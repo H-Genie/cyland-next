@@ -7,7 +7,7 @@ export async function GET() {
     const { rows } = await client.query(`
       select
         p.*,
-        c.name as classification
+        c.name as classification_label
       from portfolio p
       LEFT JOIN classification c ON p.classification = c.classification
       WHERE p.is_active = true 
