@@ -1,7 +1,9 @@
 import styled from "@emotion/styled";
-import { portfolio } from "constants/portfolios";
+import { usePortfolio } from "hooks/queries/usePortfolio";
 
 export default function PortfolioSelect() {
+  const { data, isLoading } = usePortfolio();
+
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     const url = e.target.value;
@@ -10,11 +12,12 @@ export default function PortfolioSelect() {
     window.open(url);
   };
 
+  if (isLoading) return null;
   return (
     <Select onChange={onChange}>
       <option value="">포트폴리오 파도타기</option>
-      {portfolio.map(
-        item =>
+      {data.map(
+        (item: any) =>
           item.name !== "Cyland" && (
             <option key={item.name} value={item.link}>
               {item.name}
