@@ -9,7 +9,8 @@ export const useComment = () => {
         throw new Error("Network response was not ok");
       }
       return res.json();
-    }
+    },
+    refetchOnMount: false // 컴포넌트 마운트 시 재요청 방지
   });
 
   return { data, isLoading, isError };
