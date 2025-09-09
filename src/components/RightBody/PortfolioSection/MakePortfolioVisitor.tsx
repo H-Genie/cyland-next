@@ -13,6 +13,8 @@ interface DataProps {
     study: string;
     range: string;
     sublink: object;
+    classification_label: string;
+    is_active: boolean;
   };
 }
 
@@ -21,7 +23,7 @@ export default function MakePortfolioVisitor({ data }: DataProps) {
     <Container>
       <br />
 
-      <h6 style={{ color: "#B88181" }}>{data.classification}</h6>
+      <h6 style={{ color: "#B88181" }}>{data.classification_label}</h6>
       <br />
 
       <h4 style={{ color: "#6e9bb8" }}>{data.name}</h4>
