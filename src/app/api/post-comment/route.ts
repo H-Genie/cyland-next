@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       //   [comment, nickname, decryptAES(password)]
       [comment, nickname, password]
     );
-    return NextResponse.json({ comment, nickname });
+    return NextResponse.json(true);
   } catch (err: unknown) {
     return NextResponse.json(err, { status: 500 });
   } finally {
