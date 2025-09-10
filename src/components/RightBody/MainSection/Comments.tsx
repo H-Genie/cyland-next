@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import styled from "@emotion/styled";
-import { deleteComment, updateComment, toggleForm } from "utils";
+import { useDeleteComment } from "utils/deleteComment";
+import { updateComment, toggleForm } from "utils";
 
 export const checkUpdate = (id: number) => {
   document.getElementById(`${id}_delete`)!.classList.remove("display");
@@ -16,6 +17,7 @@ export const checkDelete = (id: number) => {
 const Comments = ({ comment }: { [x: string]: any }) => {
   const [editing, setEditing] = useState(false);
   const toggleEditing = () => setEditing(prev => !prev);
+  const { deleteComment } = useDeleteComment();
 
   return (
     <>

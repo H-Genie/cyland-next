@@ -1,23 +1,47 @@
-import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "hooks/useFirestore";
+import { useCommentDelete } from "hooks/queries/useCommentDelete";
 
-export const deleteComment = (
-  e: React.FormEvent<HTMLFormElement>,
-  password: string,
-  id: number
-) => {
-  e.preventDefault();
+export const useDeleteComment = () => {
+  const deleteCommentMutation = useCommentDelete();
 
-  const form = e.target as HTMLFormElement;
-  const firstElement = form.elements[0];
+  const deleteComment = async (
+    e: React.FormEvent<HTMLFormElement>,
+    password: string,
+    id: number
+  ) => {
+    e.preventDefault();
 
-  let inputPwd: string | undefined;
-  if (firstElement instanceof HTMLInputElement) inputPwd = firstElement.value;
+    const form = e.target as HTMLFormElement;
+    const firstElement = form.elements[0];
 
-  if (inputPwd === password) {
+    let inputPwd: string | undefined;
+    if (firstElement instanceof HTMLInputElement) inputPwd = firstElement.value;
+
+    if (!inputPwd) {
+      window.alert("비밀번호를 입력해주세요");
+      return;
+    }
+
     const ok = window.confirm("메시지를 삭제할까요?");
-    if (ok) deleteDoc(doc(db, `cyland/${id}`));
-  } else window.alert("비밀번호를 확인해주세요");
+    if (!ok) return;
 
-  if (firstElement instanceof HTMLInputElement) firstElement.value = "";
+    try {
+      await deleteCommentMutation.mutateAsync({
+        id,
+        password: inputPwd
+      });
+
+      // 성공 시 폼 초기화
+      if (firstElement instanceof HTMLInputElement) firstElement.value = "";
+    } catch (error) {
+      console.error("댓글 삭제 실패:", error);
+      window.alert("비밀번호를 확인해주세요");
+    }
+  };
+
+  return {
+    deleteComment,
+    isLoading: deleteCommentMutation.isPending,
+    isError: deleteCommentMutation.isError,
+    error: deleteCommentMutation.error
+  };
 };
