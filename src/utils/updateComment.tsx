@@ -1,27 +1,58 @@
-import { updateDoc, doc } from "firebase/firestore";
-import { db } from "hooks/useFirestore";
+import { useCommentUpdate } from "hooks/queries/useCommentUpdate";
 
-export const updateComment = async (
-  e: React.FormEvent<HTMLFormElement>,
-  id: number,
-  toggleEditing: () => void
-) => {
-  e.preventDefault();
-  const form = e.target as HTMLFormElement;
-  const firstElement = form.elements[0];
+export const useUpdateComment = () => {
+  const { mutate: updateCommentMutation, isPending } = useCommentUpdate();
 
-  let value: string | undefined;
-  if (firstElement instanceof HTMLInputElement) value = firstElement.value;
+  const updateComment = async (
+    e: React.FormEvent<HTMLFormElement>,
+    id: number,
+    password: string,
+    nickname: string,
+    toggleEditing: () => void
+  ) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const commentInput = form.elements[0] as HTMLInputElement;
+    const nicknameInput = form.elements[1] as HTMLInputElement;
+    const passwordInput = form.elements[2] as HTMLInputElement;
 
-  if (value !== undefined) {
-    const docRef = doc(db, "cyland", id.toString());
+    const comment = commentInput.value;
+    const inputNickname = nicknameInput.value;
+    const inputPassword = passwordInput.value;
 
-    try {
-      await updateDoc(docRef, { comment: value });
-    } catch (error) {
-      console.error(error);
+    if (!comment.trim()) {
+      alert("댓글을 입력해주세요.");
+      return;
     }
-  }
 
-  toggleEditing();
+    if (!inputNickname.trim()) {
+      alert("닉네임을 입력해주세요.");
+      return;
+    }
+
+    if (!inputPassword.trim()) {
+      alert("비밀번호를 입력해주세요.");
+      return;
+    }
+
+    updateCommentMutation(
+      {
+        id,
+        comment,
+        nickname: inputNickname,
+        password: inputPassword
+      },
+      {
+        onSuccess: () => {
+          toggleEditing();
+        },
+        onError: error => {
+          console.error("댓글 수정 실패:", error);
+          alert("댓글 수정에 실패했습니다. 비밀번호를 확인해주세요.");
+        }
+      }
+    );
+  };
+
+  return { updateComment, isPending };
 };

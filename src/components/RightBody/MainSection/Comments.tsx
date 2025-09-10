@@ -1,12 +1,17 @@
 "use client";
-import { useState } from "react";
 import styled from "@emotion/styled";
 import { useDeleteComment } from "utils/deleteComment";
-import { updateComment, toggleForm } from "utils";
+import { useUpdateComment } from "utils/updateComment";
 
 export const checkUpdate = (id: number) => {
   document.getElementById(`${id}_delete`)!.classList.remove("display");
   document.getElementById(`${id}_update`)!.classList.toggle("display");
+
+  // 수정 폼이 활성화되면 댓글 텍스트 숨기기
+  const commentItem = document.querySelector(`[data-comment-id="${id}"]`);
+  if (commentItem) {
+    commentItem.classList.toggle("editing");
+  }
 };
 
 export const checkDelete = (id: number) => {
@@ -15,74 +20,92 @@ export const checkDelete = (id: number) => {
 };
 
 const Comments = ({ comment }: { [x: string]: any }) => {
-  const [editing, setEditing] = useState(false);
-  const toggleEditing = () => setEditing(prev => !prev);
   const { deleteComment } = useDeleteComment();
+  const { updateComment, isPending } = useUpdateComment();
 
   return (
     <>
-      {editing ? (
-        <CommentList>
-          <div className="display-flex">
-            <Dot />
-            <FormComment
-              onSubmit={e => updateComment(e, comment.id, toggleEditing)}
-            >
-              <InputComment type="text" defaultValue={comment.comment} />
-              <Button>
-                <p>수정</p>
-              </Button>
-              <Button onClick={toggleEditing}>
-                <p>취소</p>
-              </Button>
-            </FormComment>
-          </div>
-        </CommentList>
-      ) : (
-        <CommentList>
-          <div className="display-flex">
-            <Dot />
-            <p>
-              {comment.comment} ({comment.nickname}){" "}
-              {comment.created_at
-                ? comment.created_at.substring(0, 10)
-                : comment.date || ""}
-            </p>
-          </div>
+      <CommentList className="comment-item" data-comment-id={comment.id}>
+        <div className="display-flex">
+          <Dot />
+          <p className="comment-text">
+            {comment.comment} ({comment.nickname}){" "}
+            {comment.created_at
+              ? comment.created_at.substring(0, 10)
+              : comment.date || ""}
+          </p>
+        </div>
 
-          <Figure>
-            <Form
-              id={`${comment.id}_update`}
-              onSubmit={e => toggleForm(e, comment.password, toggleEditing)}
+        <Figure>
+          <Form
+            id={`${comment.id}_update`}
+            onSubmit={e =>
+              updateComment(
+                e,
+                comment.id,
+                comment.password,
+                comment.nickname,
+                () => {
+                  document
+                    .getElementById(`${comment.id}_update`)!
+                    .classList.remove("display");
+                  document
+                    .querySelector(`[data-comment-id="${comment.id}"]`)!
+                    .classList.remove("editing");
+                }
+              )
+            }
+          >
+            <InputComment
+              type="text"
+              defaultValue={comment.comment}
+              placeholder="댓글을 입력하세요"
+            />
+            <InputNickname
+              type="text"
+              defaultValue={comment.nickname}
+              placeholder="닉네임을 입력하세요"
+            />
+            <Input type="password" placeholder="수정 : 비밀번호 입력" />
+            <Button type="submit" disabled={isPending}>
+              <p>{isPending ? "수정중..." : "수정"}</p>
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                document
+                  .getElementById(`${comment.id}_update`)!
+                  .classList.remove("display");
+                document
+                  .querySelector(`[data-comment-id="${comment.id}"]`)!
+                  .classList.remove("editing");
+              }}
             >
-              <Input type="password" placeholder="수정 : 비밀번호 입력" />
-              <Button>
-                <p>확인</p>
-              </Button>
-            </Form>
-            <Form
-              id={`${comment.id}_delete`}
-              onSubmit={e => deleteComment(e, comment.password, comment.id)}
-            >
-              <Input type="password" placeholder="삭제 : 비밀번호 입력" />
-              <Button>
-                <p>확인</p>
-              </Button>
-            </Form>
+              <p>취소</p>
+            </Button>
+          </Form>
+          <Form
+            id={`${comment.id}_delete`}
+            onSubmit={e => deleteComment(e, comment.password, comment.id)}
+          >
+            <Input type="password" placeholder="삭제 : 비밀번호 입력" />
+            <Button>
+              <p>확인</p>
+            </Button>
+          </Form>
 
-            <img
-              src="/images/edit.svg"
-              alt="edit"
-              onClick={() => checkUpdate(comment.id)}
-            />
-            <img
-              src="/images/delete.svg"
-              alt="delete"
-              onClick={() => checkDelete(comment.id)}
-            />
-          </Figure>
-        </CommentList>
-      )}
+          <img
+            src="/images/edit.svg"
+            alt="edit"
+            onClick={() => checkUpdate(comment.id)}
+          />
+          <img
+            src="/images/delete.svg"
+            alt="delete"
+            onClick={() => checkDelete(comment.id)}
+          />
+        </Figure>
+      </CommentList>
     </>
   );
 };
@@ -106,6 +129,11 @@ const CommentList = styled.li`
   .display-flex {
     display: flex;
     align-items: center;
+  }
+
+  /* 수정 모드일 때 댓글 텍스트 숨기기 */
+  &.editing .comment-text {
+    display: none;
   }
 `;
 
@@ -154,4 +182,8 @@ const Input = styled.input`
 
 const InputComment = styled(Input)`
   width: 400px;
+`;
+
+const InputNickname = styled(Input)`
+  width: 100px;
 `;
