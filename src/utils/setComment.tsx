@@ -1,46 +1,53 @@
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "hooks/useFirestore";
+import { useCommentCreate } from "hooks/queries/useCommentCreate";
 
-export const setComment = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+export const useSetComment = () => {
+  const createCommentMutation = useCommentCreate();
 
-  const form = e.target as HTMLFormElement;
+  const setComment = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  const firstElement = form.elements[0];
-  const thirdElement = form.elements[2];
-  const fourthElement = form.elements[3];
+    const form = e.target as HTMLFormElement;
 
-  let comment: string | undefined,
-    nickname: string | undefined,
-    password: string | undefined;
+    const firstElement = form.elements[0];
+    const thirdElement = form.elements[2];
+    const fourthElement = form.elements[3];
 
-  if (firstElement instanceof HTMLInputElement) comment = firstElement.value;
-  if (thirdElement instanceof HTMLInputElement) nickname = thirdElement.value;
-  if (fourthElement instanceof HTMLInputElement) password = fourthElement.value;
+    let comment: string | undefined,
+      nickname: string | undefined,
+      password: string | undefined;
 
-  const checkEmpty = !comment || !nickname || !password || password.length < 4;
+    if (firstElement instanceof HTMLInputElement) comment = firstElement.value;
+    if (thirdElement instanceof HTMLInputElement) nickname = thirdElement.value;
+    if (fourthElement instanceof HTMLInputElement)
+      password = fourthElement.value;
 
-  if (checkEmpty) {
-    alert("빈 칸이 있거나, 자릿수가 맞는지 확인해주세요");
-    return;
-  }
+    const checkEmpty =
+      !comment || !nickname || !password || password.length < 4;
 
-  const id = Date.now();
-  const commentObj = {
-    id,
-    comment,
-    nickname,
-    password,
-    date: new Date().toLocaleDateString()
+    if (checkEmpty) {
+      alert("빈 칸이 있거나, 자릿수가 맞는지 확인해주세요");
+      return;
+    }
+
+    try {
+      await createCommentMutation.mutateAsync({
+        comment: comment!,
+        nickname: nickname!,
+        password: password!
+      });
+
+      if (firstElement instanceof HTMLInputElement) firstElement.value = "";
+      if (thirdElement instanceof HTMLInputElement) thirdElement.value = "";
+      if (fourthElement instanceof HTMLInputElement) fourthElement.value = "";
+    } catch (error) {
+      console.error("댓글 생성 실패:", error);
+    }
   };
 
-  try {
-    await setDoc(doc(db, `cyland/${id}`), commentObj);
-  } catch (error) {
-    console.error(error);
-  }
-
-  if (firstElement instanceof HTMLInputElement) firstElement.value = "";
-  if (thirdElement instanceof HTMLInputElement) thirdElement.value = "";
-  if (fourthElement instanceof HTMLInputElement) fourthElement.value = "";
+  return {
+    setComment,
+    isLoading: createCommentMutation.isPending,
+    isError: createCommentMutation.isError,
+    error: createCommentMutation.error
+  };
 };

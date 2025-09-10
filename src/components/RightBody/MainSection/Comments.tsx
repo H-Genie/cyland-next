@@ -42,7 +42,9 @@ const Comments = ({ comment }: { [x: string]: any }) => {
             <Dot />
             <p>
               {comment.comment} ({comment.nickname}){" "}
-              {comment.created_at.substring(0, 10)}
+              {comment.created_at
+                ? comment.created_at.substring(0, 10)
+                : comment.date || ""}
             </p>
           </div>
 

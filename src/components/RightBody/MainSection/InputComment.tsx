@@ -1,11 +1,13 @@
 import styled from "@emotion/styled";
-import { setComment } from "utils";
+import { useSetComment } from "utils/setComment";
 
 const toggleBottom = () => {
   document.querySelector("#bottom")!.classList.toggle("flex");
 };
 
 const InputComment = () => {
+  const { setComment } = useSetComment();
+
   return (
     <InputContainer>
       <h6>Friends Say</h6>
