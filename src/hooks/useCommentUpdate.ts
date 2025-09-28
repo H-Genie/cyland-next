@@ -1,7 +1,7 @@
 import { useCommentUpdate } from "hooks/queries/useCommentUpdate";
 import { encryptAES } from "utils/crypto";
 
-export const useUpdateComment = () => {
+export const useCommentUpdateForm = () => {
   const { mutate: updateCommentMutation, isPending } = useCommentUpdate();
 
   const updateComment = async (

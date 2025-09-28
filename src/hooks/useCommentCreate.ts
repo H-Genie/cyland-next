@@ -1,7 +1,7 @@
 import { useCommentCreate } from "hooks/queries/useCommentCreate";
 import { encryptAES } from "utils/crypto";
 
-export const useSetComment = () => {
+export const useCommentCreateForm = () => {
   const createCommentMutation = useCommentCreate();
 
   const setComment = async (e: React.FormEvent<HTMLFormElement>) => {

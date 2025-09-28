@@ -1,7 +1,7 @@
 import { useCommentDelete } from "hooks/queries/useCommentDelete";
 import { encryptAES } from "utils/crypto";
 
-export const useDeleteComment = () => {
+export const useCommentDeleteForm = () => {
   const deleteCommentMutation = useCommentDelete();
 
   const deleteComment = async (

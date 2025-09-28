@@ -1,7 +1,7 @@
 "use client";
 import styled from "@emotion/styled";
-import { useDeleteComment } from "utils/deleteComment";
-import { useUpdateComment } from "utils/updateComment";
+import { useCommentDeleteForm } from "hooks/useCommentDelete";
+import { useCommentUpdateForm } from "hooks/useCommentUpdate";
 
 export const checkUpdate = (id: number) => {
   document.getElementById(`${id}_delete`)!.classList.remove("display");
@@ -20,8 +20,8 @@ export const checkDelete = (id: number) => {
 };
 
 const Comments = ({ comment }: { [x: string]: any }) => {
-  const { deleteComment } = useDeleteComment();
-  const { updateComment, isPending } = useUpdateComment();
+  const { deleteComment } = useCommentDeleteForm();
+  const { updateComment, isPending } = useCommentUpdateForm();
 
   return (
     <>

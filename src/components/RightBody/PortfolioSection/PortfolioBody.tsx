@@ -3,7 +3,6 @@ import MakePortfolioCarousel from "components/RightBody/PortfolioSection/MakePor
 import MakePortfolioVisitor from "components/RightBody/PortfolioSection/MakePortfolioVisitor";
 import { Route } from "components/RightBody/common/Route";
 import Visitor from "components/RightBody/common/Visitor";
-// import { portfoilioVisitor } from "constants/portfolios";
 import { usePortfolio } from "hooks/queries/usePortfolio";
 import Loader from "styles/Loader";
 

@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
-import { useSetComment } from "utils/setComment";
+import { useCommentCreateForm } from "hooks/useCommentCreate";
 
 const toggleBottom = () => {
   document.querySelector("#bottom")!.classList.toggle("flex");
 };
 
 const InputComment = () => {
-  const { setComment } = useSetComment();
+  const { setComment } = useCommentCreateForm();
 
   return (
     <InputContainer>
