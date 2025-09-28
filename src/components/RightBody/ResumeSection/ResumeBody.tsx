@@ -2,9 +2,12 @@
 import styled from "@emotion/styled";
 import { Route } from "components/RightBody/common/Route";
 import Visitor from "components/RightBody/common/Visitor";
-import { resumes } from "components/RightBody/ResumeSection/MakeResumeVisitor";
+import { useResume } from "hooks/queries/useResume";
+import ReactJsxParser from "react-jsx-parser";
 
 export default function ResumeBody() {
+  const { data, isLoading, isError } = useResume();
+
   const onFullScreen = () => {
     const video = document.querySelector("#video") as HTMLVideoElement;
     const play = document.querySelector("#play") as HTMLDivElement;
@@ -13,6 +16,9 @@ export default function ResumeBody() {
     play.style.cssText = "display:none;";
     video.setAttribute("controls", "");
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading resume data</div>;
 
   return (
     <Route>
@@ -32,8 +38,12 @@ export default function ResumeBody() {
         </PlayButton>
       </VideoContainer>
 
-      {resumes.map((resume, index) => (
-        <Visitor key={index + 1} no={index + 1} contents={resume} />
+      {data?.map((item: { content: string }, index: number) => (
+        <Visitor
+          key={index + 1}
+          no={index + 1}
+          contents={<ReactJsxParser jsx={item.content} />}
+        />
       ))}
     </Route>
   );
