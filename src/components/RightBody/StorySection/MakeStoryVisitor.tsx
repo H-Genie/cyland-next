@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import MakeStoryCarousel from "./MakeStoryCarousel";
 
-const Paragraph = styled.p`
+export const Paragraph = styled.p`
   font-family: "S-CoreDream-3Light";
   font-size: 20px;
   line-height: 32px;
@@ -12,7 +12,7 @@ const Paragraph = styled.p`
   }
 `;
 
-const BoxShadow = styled.div`
+export const BoxShadow = styled.div`
   width: fit-content;
   border: 1px solid rgb(108, 108, 108);
   padding: 10px;
@@ -23,7 +23,7 @@ const BoxShadow = styled.div`
   line-height: 32px;
 `;
 
-const Running = styled.div`
+export const Running = styled.div`
   width: 480px;
 
   img {
@@ -31,7 +31,7 @@ const Running = styled.div`
   }
 `;
 
-const Iframe = styled.iframe`
+export const Iframe = styled.iframe`
   box-shadow: 10px 10px #a10448;
   border: 5px solid #ec0c6d;
 `;

@@ -4,6 +4,7 @@ import { Route } from "components/RightBody/common/Route";
 import Visitor from "components/RightBody/common/Visitor";
 import { useResume } from "hooks/queries/useResume";
 import ReactJsxParser from "react-jsx-parser";
+import Loader from "styles/Loader";
 
 export default function ResumeBody() {
   const { data, isLoading, isError } = useResume();
@@ -17,8 +18,8 @@ export default function ResumeBody() {
     video.setAttribute("controls", "");
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading resume data</div>;
+  if (isLoading) return <Loader.Basic />;
+  if (isError) return <div>에러가 발생했습니다. 새로고침 해줏세요.</div>;
 
   return (
     <Route>
