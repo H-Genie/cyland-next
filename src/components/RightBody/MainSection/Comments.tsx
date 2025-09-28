@@ -34,66 +34,58 @@ const Comments = ({ comment }: { [x: string]: any }) => {
               ? comment.created_at.substring(0, 10)
               : comment.date || ""}
           </p>
+          <div>
+            <Form
+              id={`${comment.id}_update`}
+              onSubmit={e =>
+                updateComment(
+                  e,
+                  comment.id,
+                  comment.password,
+                  comment.nickname,
+                  () => {
+                    document
+                      .getElementById(`${comment.id}_update`)!
+                      .classList.remove("display");
+                    document
+                      .querySelector(`[data-comment-id="${comment.id}"]`)!
+                      .classList.remove("editing");
+                  }
+                )
+              }
+            >
+              <InputComment
+                type="text"
+                defaultValue={comment.comment}
+                placeholder="댓글을 입력하세요"
+              />
+              <InputNickname
+                type="text"
+                defaultValue={comment.nickname}
+                placeholder="닉네임을 입력하세요"
+              />
+              <Input
+                type="password"
+                placeholder="수정 : 비밀번호 입력"
+                style={{ width: 120 }}
+              />
+              <Button type="submit" disabled={isPending}>
+                <p>수정</p>
+              </Button>
+            </Form>
+            <Form
+              id={`${comment.id}_delete`}
+              onSubmit={e => deleteComment(e, comment.password, comment.id)}
+            >
+              <Input type="password" placeholder="삭제 : 비밀번호 입력" />
+              <Button>
+                <p>확인</p>
+              </Button>
+            </Form>
+          </div>
         </div>
 
         <Figure>
-          <Form
-            id={`${comment.id}_update`}
-            onSubmit={e =>
-              updateComment(
-                e,
-                comment.id,
-                comment.password,
-                comment.nickname,
-                () => {
-                  document
-                    .getElementById(`${comment.id}_update`)!
-                    .classList.remove("display");
-                  document
-                    .querySelector(`[data-comment-id="${comment.id}"]`)!
-                    .classList.remove("editing");
-                }
-              )
-            }
-          >
-            <InputComment
-              type="text"
-              defaultValue={comment.comment}
-              placeholder="댓글을 입력하세요"
-            />
-            <InputNickname
-              type="text"
-              defaultValue={comment.nickname}
-              placeholder="닉네임을 입력하세요"
-            />
-            <Input type="password" placeholder="수정 : 비밀번호 입력" />
-            <Button type="submit" disabled={isPending}>
-              <p>{isPending ? "수정중..." : "수정"}</p>
-            </Button>
-            <Button
-              type="button"
-              onClick={() => {
-                document
-                  .getElementById(`${comment.id}_update`)!
-                  .classList.remove("display");
-                document
-                  .querySelector(`[data-comment-id="${comment.id}"]`)!
-                  .classList.remove("editing");
-              }}
-            >
-              <p>취소</p>
-            </Button>
-          </Form>
-          <Form
-            id={`${comment.id}_delete`}
-            onSubmit={e => deleteComment(e, comment.password, comment.id)}
-          >
-            <Input type="password" placeholder="삭제 : 비밀번호 입력" />
-            <Button>
-              <p>확인</p>
-            </Button>
-          </Form>
-
           <img
             src="/images/edit.svg"
             alt="edit"
@@ -162,7 +154,7 @@ const Button = styled.button`
 
 const Figure = styled.figure`
   margin-right: 10px;
-  display: none;
+  display: flex;
 `;
 
 const Form = styled.form`
@@ -181,9 +173,9 @@ const Input = styled.input`
 `;
 
 const InputComment = styled(Input)`
-  width: 400px;
+  /* width: 300px; */
 `;
 
 const InputNickname = styled(Input)`
-  width: 100px;
+  /* width: 100px; */
 `;
