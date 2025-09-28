@@ -1,4 +1,5 @@
 import { useCommentCreate } from "hooks/queries/useCommentCreate";
+import { encryptAES } from "utils/crypto";
 
 export const useSetComment = () => {
   const createCommentMutation = useCommentCreate();
@@ -33,7 +34,7 @@ export const useSetComment = () => {
       await createCommentMutation.mutateAsync({
         comment: comment!,
         nickname: nickname!,
-        password: password!
+        password: encryptAES(password!)
       });
 
       if (firstElement instanceof HTMLInputElement) firstElement.value = "";

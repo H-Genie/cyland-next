@@ -1,4 +1,5 @@
 import { useCommentDelete } from "hooks/queries/useCommentDelete";
+import { encryptAES } from "utils/crypto";
 
 export const useDeleteComment = () => {
   const deleteCommentMutation = useCommentDelete();
@@ -27,7 +28,7 @@ export const useDeleteComment = () => {
     try {
       await deleteCommentMutation.mutateAsync({
         id,
-        password: inputPwd
+        password: encryptAES(inputPwd)
       });
 
       // 성공 시 폼 초기화

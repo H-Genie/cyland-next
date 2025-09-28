@@ -13,8 +13,7 @@ export async function POST(req: Request) {
   try {
     await client.query(
       `INSERT INTO comment (comment, nickname, password) VALUES ($1, $2, $3)`,
-      //   [comment, nickname, decryptAES(password)]
-      [comment, nickname, password]
+      [comment, nickname, decryptAES(password)]
     );
     return NextResponse.json(true);
   } catch (err: unknown) {

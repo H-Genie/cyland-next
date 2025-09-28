@@ -1,4 +1,5 @@
 import { useCommentUpdate } from "hooks/queries/useCommentUpdate";
+import { encryptAES } from "utils/crypto";
 
 export const useUpdateComment = () => {
   const { mutate: updateCommentMutation, isPending } = useCommentUpdate();
@@ -40,7 +41,7 @@ export const useUpdateComment = () => {
         id,
         comment,
         nickname: inputNickname,
-        password: inputPassword
+        password: encryptAES(inputPassword)
       },
       {
         onSuccess: () => {
