@@ -5,6 +5,7 @@ import { Route } from "components/RightBody/common/Route";
 import Visitor from "components/RightBody/common/Visitor";
 import { usePortfolio } from "hooks/queries/usePortfolio";
 import Loader from "styles/Loader";
+import type { Portfolio } from "types/portfolio";
 
 export default function PortfolioBody() {
   const { data, isLoading, isError } = usePortfolio();
@@ -14,7 +15,7 @@ export default function PortfolioBody() {
 
   const getClassificationCount = (classification: number) => {
     if (!data || !Array.isArray(data)) return 0;
-    return data.filter((item: any) => {
+    return data.filter((item: Portfolio) => {
       return item.classification === classification.toString();
     }).length;
   };
@@ -55,7 +56,7 @@ export default function PortfolioBody() {
         }
         notice={true}
       />
-      {data.map((visitor: any, index: any) => (
+      {data.map((visitor: Portfolio, index: number) => (
         <Visitor
           key={index + 1}
           no={index + 1}

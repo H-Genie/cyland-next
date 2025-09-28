@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { usePortfolio } from "hooks/queries/usePortfolio";
+import type { Portfolio } from "types/portfolio";
 
 export default function PortfolioSelect() {
   const { data, isLoading } = usePortfolio();
@@ -17,7 +18,7 @@ export default function PortfolioSelect() {
     <Select onChange={onChange}>
       <option value="">포트폴리오 파도타기</option>
       {data.map(
-        (item: any) =>
+        (item: Portfolio) =>
           item.name !== "Cyland" && (
             <option key={item.name} value={item.link}>
               {item.name}

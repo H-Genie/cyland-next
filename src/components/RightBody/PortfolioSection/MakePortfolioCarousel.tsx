@@ -1,13 +1,12 @@
 import { Settings } from "react-slick";
 import Carousel from "../common/Carousel";
-
-interface MakePortfolioCarouselProps {
-  portfolioData: any[];
-}
+import type { Portfolio } from "types/portfolio";
 
 export default function MakePortfolioCarousel({
   portfolioData
-}: MakePortfolioCarouselProps) {
+}: {
+  portfolioData: Portfolio[];
+}) {
   const sliderContents = portfolioData.map(item => (
     <div key={item.name}>
       <img src={item.thumbnail} alt={item.name} />

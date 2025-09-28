@@ -6,6 +6,7 @@ import { useStory } from "hooks/queries/useStory";
 import Loader from "styles/Loader";
 import ReactJsxParser from "react-jsx-parser";
 import MakeStoryCarousel from "components/RightBody/StorySection/MakeStoryCarousel";
+import type { Story } from "types/story";
 
 export const Paragraph = styled.p`
   font-family: "S-CoreDream-3Light";
@@ -46,7 +47,7 @@ export const Iframe = styled.iframe`
 export default function StoryBody() {
   const { data, isLoading, isError } = useStory();
 
-  const components: any = {
+  const components = {
     Paragraph,
     BoxShadow,
     Running,
@@ -59,12 +60,15 @@ export default function StoryBody() {
   return (
     <>
       <Route>
-        {data.map((story: any, index: any) => (
+        {data.map((story: Story, index: number) => (
           <Visitor
             key={index}
             no={index + 1}
             contents={
-              <ReactJsxParser jsx={story.content} components={components} />
+              <ReactJsxParser
+                jsx={story.content}
+                components={components as any}
+              />
             }
             notice={false}
           />

@@ -7,8 +7,6 @@ export const useCommentUpdateForm = () => {
   const updateComment = async (
     e: React.FormEvent<HTMLFormElement>,
     id: number,
-    password: string,
-    nickname: string,
     toggleEditing: () => void
   ) => {
     e.preventDefault();

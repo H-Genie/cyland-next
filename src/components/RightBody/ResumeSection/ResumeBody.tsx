@@ -9,6 +9,10 @@ import Loader from "styles/Loader";
 export default function ResumeBody() {
   const { data, isLoading, isError } = useResume();
 
+  // const moveToVideo = (time: number) => {
+  //   (document.querySelector("#video") as HTMLVideoElement).currentTime = time;
+  // };
+
   const onFullScreen = () => {
     const video = document.querySelector("#video") as HTMLVideoElement;
     const play = document.querySelector("#play") as HTMLDivElement;

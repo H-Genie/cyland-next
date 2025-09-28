@@ -3,6 +3,7 @@ import InputComment from "./InputComment";
 import Comments from "./Comments";
 import { useComment } from "hooks/queries/useComment";
 import Loader from "styles/Loader";
+import type { Comment } from "types/comment";
 
 const CommentContainer = () => {
   const { data: comments, isError, isLoading } = useComment();
@@ -12,7 +13,7 @@ const CommentContainer = () => {
   return (
     <CommentsContainer>
       <InputComment />
-      {comments?.map((comment: any) => (
+      {comments?.map((comment: Comment) => (
         <Comments key={comment.id} comment={comment} />
       ))}
     </CommentsContainer>

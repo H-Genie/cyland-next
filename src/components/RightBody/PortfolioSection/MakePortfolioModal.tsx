@@ -16,6 +16,7 @@ export default function MakePortfolioModal({
   for (let i = 0; i < imageIndex; i++) {
     images.push(
       <img
+        key={i}
         src={`./images/portfolio/${projectName}-modal-${i + 1}.jpg`}
         style={{ width: "100%", maxWidth: "-webkit-fill-available" }}
       />

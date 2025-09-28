@@ -2,6 +2,7 @@
 import styled from "@emotion/styled";
 import { useCommentDeleteForm } from "hooks/useCommentDelete";
 import { useCommentUpdateForm } from "hooks/useCommentUpdate";
+import type { Comment } from "types/comment";
 
 export const checkUpdate = (id: number) => {
   document.getElementById(`${id}_delete`)!.classList.remove("display");
@@ -19,7 +20,7 @@ export const checkDelete = (id: number) => {
   document.getElementById(`${id}_delete`)!.classList.toggle("display");
 };
 
-const Comments = ({ comment }: { [x: string]: any }) => {
+const Comments = ({ comment }: { comment: Comment }) => {
   const { deleteComment } = useCommentDeleteForm();
   const { updateComment, isPending } = useCommentUpdateForm();
 
@@ -30,28 +31,20 @@ const Comments = ({ comment }: { [x: string]: any }) => {
           <Dot />
           <p className="comment-text">
             {comment.comment} ({comment.nickname}){" "}
-            {comment.created_at
-              ? comment.created_at.substring(0, 10)
-              : comment.date || ""}
+            {comment.created_at.substring(0, 10)}
           </p>
           <div>
             <Form
               id={`${comment.id}_update`}
               onSubmit={e =>
-                updateComment(
-                  e,
-                  comment.id,
-                  comment.password,
-                  comment.nickname,
-                  () => {
-                    document
-                      .getElementById(`${comment.id}_update`)!
-                      .classList.remove("display");
-                    document
-                      .querySelector(`[data-comment-id="${comment.id}"]`)!
-                      .classList.remove("editing");
-                  }
-                )
+                updateComment(e, comment.id, () => {
+                  document
+                    .getElementById(`${comment.id}_update`)!
+                    .classList.remove("display");
+                  document
+                    .querySelector(`[data-comment-id="${comment.id}"]`)!
+                    .classList.remove("editing");
+                })
               }
             >
               <InputComment
@@ -75,7 +68,7 @@ const Comments = ({ comment }: { [x: string]: any }) => {
             </Form>
             <Form
               id={`${comment.id}_delete`}
-              onSubmit={e => deleteComment(e, comment.password, comment.id)}
+              onSubmit={e => deleteComment(e, comment.id)}
             >
               <Input type="password" placeholder="삭제 : 비밀번호 입력" />
               <Button>

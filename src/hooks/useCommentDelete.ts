@@ -6,7 +6,6 @@ export const useCommentDeleteForm = () => {
 
   const deleteComment = async (
     e: React.FormEvent<HTMLFormElement>,
-    password: string,
     id: number
   ) => {
     e.preventDefault();

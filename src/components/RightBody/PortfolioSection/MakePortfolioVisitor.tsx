@@ -1,24 +1,9 @@
 import styled from "@emotion/styled";
 import JsxParser from "react-jsx-parser";
 import MakePortfolioModal from "./MakePortfolioModal";
+import type { Portfolio } from "types/portfolio";
 
-interface DataProps {
-  data: {
-    name: string;
-    link: string;
-    thumbnail: string;
-    classification: string;
-    language: string;
-    description: string;
-    study: string;
-    range: string;
-    sublink: object;
-    classification_label: string;
-    is_active: boolean;
-  };
-}
-
-export default function MakePortfolioVisitor({ data }: DataProps) {
+export default function MakePortfolioVisitor({ data }: { data: Portfolio }) {
   return (
     <Container>
       <br />
@@ -68,7 +53,7 @@ export default function MakePortfolioVisitor({ data }: DataProps) {
             );
           } else {
             return (
-              <div style={{ marginRight: 15 }}>
+              <div style={{ marginRight: 15 }} key={item[0]}>
                 <JsxParser
                   jsx={item[1]}
                   components={{ MakePortfolioModal: MakePortfolioModal as any }}
