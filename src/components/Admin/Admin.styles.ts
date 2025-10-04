@@ -164,3 +164,4 @@ export const ActionButton = styled.button<{ edit?: boolean; delete?: boolean }>`
 export const PortfolioSection = styled.div``;
 export const StorySection = styled.div``;
 export const CommentSection = styled.div``;
+export const ResumeSection = styled.div``;
