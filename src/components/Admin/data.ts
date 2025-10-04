@@ -3,27 +3,6 @@ import { Resume } from "./sections/ResumeSection";
 import { Portfolio } from "./sections/PortfolioSection";
 import { Story } from "./sections/StorySection";
 
-export const mockComments: Comment[] = [
-  {
-    id: 1,
-    nickname: "방문자1",
-    content: "좋은 포트폴리오네요!",
-    createdAt: "2024-01-15"
-  },
-  {
-    id: 2,
-    nickname: "개발자",
-    content: "정말 인상적인 프로젝트들이 많네요.",
-    createdAt: "2024-01-16"
-  },
-  {
-    id: 3,
-    nickname: "디자이너",
-    content: "UI/UX 디자인이 깔끔하네요!",
-    createdAt: "2024-01-17"
-  }
-];
-
 export const mockResumes: Resume[] = [
   {
     id: 1,

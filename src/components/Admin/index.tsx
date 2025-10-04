@@ -1,18 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
 import * as Style from "./Admin.styles";
-import CommentSection, { Comment } from "./sections/CommentSection";
+import CommentSection from "./sections/CommentSection";
 import ResumeSection, { Resume } from "./sections/ResumeSection";
 import PortfolioSection, { Portfolio } from "./sections/PortfolioSection";
 import StorySection, { Story } from "./sections/StorySection";
-import { mockComments, mockResumes, mockPortfolios, mockStories } from "./data";
+import { mockResumes, mockPortfolios, mockStories } from "./data";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("comment");
   const [isClient, setIsClient] = useState(false);
 
   // 상태 관리 - 나중에 API에서 가져올 데이터
-  const [comments, setComments] = useState<Comment[]>(mockComments);
   const [resumes, setResumes] = useState<Resume[]>(mockResumes);
   const [portfolios, setPortfolios] = useState<Portfolio[]>(mockPortfolios);
   const [stories, setStories] = useState<Story[]>(mockStories);
@@ -22,10 +21,6 @@ export default function AdminPage() {
   }, []);
 
   // 데이터 변경 핸들러들
-  const handleCommentsChange = (newComments: Comment[]) => {
-    setComments(newComments);
-  };
-
   const handleResumesChange = (newResumes: Resume[]) => {
     setResumes(newResumes);
   };
@@ -82,12 +77,7 @@ export default function AdminPage() {
       </Style.AdminTabs>
 
       <Style.AdminContent>
-        {activeTab === "comment" && (
-          <CommentSection
-            initialComments={comments}
-            onDataChange={handleCommentsChange}
-          />
-        )}
+        {activeTab === "comment" && <CommentSection />}
 
         {activeTab === "resume" && (
           <ResumeSection

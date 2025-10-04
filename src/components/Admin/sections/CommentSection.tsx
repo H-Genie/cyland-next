@@ -1,25 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Style from "../Admin.styles";
 import SectionHeader from "./SectionHeader";
 import DataTable, { TableColumn, TableAction } from "./DataTable";
+import { useComment } from "../../../hooks/queries/useComment";
+import { useCommentDelete } from "../../../hooks/queries/useCommentDelete";
 
 export interface Comment {
   id: number;
   nickname: string;
-  content: string;
-  createdAt: string;
+  comment: string; // API에서는 'comment' 필드 사용
+  created_at: string; // API에서는 'created_at' 필드 사용
 }
 
-interface CommentSectionProps {
-  initialComments: Comment[];
-  onDataChange?: (comments: Comment[]) => void;
-}
+export default function CommentSection() {
+  const { data: apiComments, isLoading, isError } = useComment();
+  const deleteCommentMutation = useCommentDelete();
+  const [comments, setComments] = useState<Comment[]>([]);
 
-export default function CommentSection({
-  initialComments,
-  onDataChange
-}: CommentSectionProps) {
-  const [comments, setComments] = useState<Comment[]>(initialComments);
+  // API에서 데이터를 가져오면 상태 업데이트
+  useEffect(() => {
+    if (apiComments && Array.isArray(apiComments)) {
+      setComments(apiComments);
+    }
+  }, [apiComments]);
 
   const handleEdit = (comment: Comment) => {
     console.log("댓글 수정:", comment);
@@ -30,27 +33,39 @@ export default function CommentSection({
     // onDataChange?.(newComments);
   };
 
-  const handleDelete = (comment: Comment) => {
-    console.log("댓글 삭제:", comment);
-    // TODO: 댓글 삭제 로직
-    // await api.deleteComment(comment.id);
-    // const newComments = comments.filter(c => c.id !== comment.id);
-    // setComments(newComments);
-    // onDataChange?.(newComments);
+  const handleDelete = async (comment: Comment) => {
+    if (window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
+      try {
+        // 관리자 비밀번호를 사용하여 삭제 (실제 환경에서는 적절한 인증 방식 사용)
+        await deleteCommentMutation.mutateAsync({
+          id: comment.id,
+          password: "admin" // 임시 관리자 비밀번호
+        });
+
+        // 삭제 성공 시 로컬 상태도 업데이트
+        const newComments = comments.filter(c => c.id !== comment.id);
+        setComments(newComments);
+
+        alert("댓글이 성공적으로 삭제되었습니다.");
+      } catch (error) {
+        console.error("댓글 삭제 실패:", error);
+        alert("댓글 삭제에 실패했습니다.");
+      }
+    }
   };
   const columns: TableColumn[] = [
     { key: "id", label: "ID", width: "80px" },
     { key: "nickname", label: "닉네임", width: "120px" },
-    { key: "content", label: "댓글 내용" },
-    { key: "createdAt", label: "작성일", width: "120px" }
+    { key: "comment", label: "댓글 내용" },
+    { key: "created_at", label: "작성일", width: "180px" }
   ];
 
   const actions: TableAction[] = [
-    {
-      label: "수정",
-      type: "edit",
-      onClick: comment => handleEdit(comment)
-    },
+    // {
+    //   label: "수정",
+    //   type: "edit",
+    //   onClick: comment => handleEdit(comment)
+    // },
     {
       label: "삭제",
       type: "delete",
@@ -58,9 +73,32 @@ export default function CommentSection({
     }
   ];
 
+  // 로딩 상태 처리
+  if (isLoading) {
+    return (
+      <Style.CommentSection>
+        <SectionHeader title="댓글 관리" />
+        <div style={{ textAlign: "center", padding: "40px" }}>
+          <p>댓글을 불러오는 중...</p>
+        </div>
+      </Style.CommentSection>
+    );
+  }
+
+  // 에러 상태 처리
+  if (isError) {
+    return (
+      <Style.CommentSection>
+        <SectionHeader title="댓글 관리" />
+        <div style={{ textAlign: "center", padding: "40px", color: "#dc3545" }}>
+          <p>댓글을 불러오는 중 오류가 발생했습니다.</p>
+        </div>
+      </Style.CommentSection>
+    );
+  }
+
   return (
     <Style.CommentSection>
-      <SectionHeader title="댓글 관리" />
       <DataTable columns={columns} data={comments} actions={actions} />
     </Style.CommentSection>
   );
