@@ -1,7 +1,4 @@
 import { Metadata } from "next";
-import Main from "components/Main";
-import GlobalStyle from "../components/GlobalStyle";
-import Providers from "../components/Providers";
 
 export const metadata: Metadata = {
   title: "H-Genie.com",
@@ -31,15 +28,14 @@ export const metadata: Metadata = {
   }
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="ko">
-      <body>
-        <Providers>
-          <GlobalStyle />
-          <Main>{children}</Main>
-        </Providers>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
