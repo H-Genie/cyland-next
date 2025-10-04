@@ -1,14 +1,42 @@
 "use client";
 import { useState, useEffect } from "react";
 import * as Style from "./Admin.styles";
+import CommentSection, { Comment } from "./sections/CommentSection";
+import ResumeSection, { Resume } from "./sections/ResumeSection";
+import PortfolioSection, { Portfolio } from "./sections/PortfolioSection";
+import StorySection, { Story } from "./sections/StorySection";
+import { mockComments, mockResumes, mockPortfolios, mockStories } from "./data";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("comment");
   const [isClient, setIsClient] = useState(false);
 
+  // 상태 관리 - 나중에 API에서 가져올 데이터
+  const [comments, setComments] = useState<Comment[]>(mockComments);
+  const [resumes, setResumes] = useState<Resume[]>(mockResumes);
+  const [portfolios, setPortfolios] = useState<Portfolio[]>(mockPortfolios);
+  const [stories, setStories] = useState<Story[]>(mockStories);
+
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // 데이터 변경 핸들러들
+  const handleCommentsChange = (newComments: Comment[]) => {
+    setComments(newComments);
+  };
+
+  const handleResumesChange = (newResumes: Resume[]) => {
+    setResumes(newResumes);
+  };
+
+  const handlePortfoliosChange = (newPortfolios: Portfolio[]) => {
+    setPortfolios(newPortfolios);
+  };
+
+  const handleStoriesChange = (newStories: Story[]) => {
+    setStories(newStories);
+  };
 
   if (!isClient) {
     return (
@@ -55,136 +83,31 @@ export default function AdminPage() {
 
       <Style.AdminContent>
         {activeTab === "comment" && (
-          <Style.CommentSection>
-            <Style.SectionHeader>
-              <h3>댓글 관리</h3>
-            </Style.SectionHeader>
-            <Style.DataTable>
-              <Style.TableHeader>
-                <th>ID</th>
-                <th>닉네임</th>
-                <th>댓글 내용</th>
-                <th>작성일</th>
-                <th>작업</th>
-              </Style.TableHeader>
-              <Style.TableBody>
-                <tr>
-                  <td>1</td>
-                  <td>방문자1</td>
-                  <td>좋은 포트폴리오네요!</td>
-                  <td>2024-01-15</td>
-                  <td>
-                    <Style.ActionButton edit>수정</Style.ActionButton>
-                    <Style.ActionButton delete>삭제</Style.ActionButton>
-                  </td>
-                </tr>
-              </Style.TableBody>
-            </Style.DataTable>
-          </Style.CommentSection>
+          <CommentSection
+            initialComments={comments}
+            onDataChange={handleCommentsChange}
+          />
         )}
 
         {activeTab === "resume" && (
-          <Style.ResumeSection>
-            <Style.SectionHeader>
-              <h3>이력서 관리</h3>
-              <Style.AddButton>새 이력서 추가</Style.AddButton>
-            </Style.SectionHeader>
-            <Style.DataTable>
-              <Style.TableHeader>
-                <th>ID</th>
-                <th>제목</th>
-                <th>분류</th>
-                <th>상태</th>
-                <th>작업</th>
-              </Style.TableHeader>
-              <Style.TableBody>
-                <tr>
-                  <td>1</td>
-                  <td>프론트엔드 개발자 이력서</td>
-                  <td>개발</td>
-                  <td>
-                    <Style.StatusBadge active>활성</Style.StatusBadge>
-                  </td>
-                  <td>
-                    <Style.ActionButton edit>수정</Style.ActionButton>
-                    <Style.ActionButton delete>삭제</Style.ActionButton>
-                  </td>
-                </tr>
-              </Style.TableBody>
-            </Style.DataTable>
-          </Style.ResumeSection>
+          <ResumeSection
+            initialResumes={resumes}
+            onDataChange={handleResumesChange}
+          />
         )}
 
         {activeTab === "portfolio" && (
-          <Style.PortfolioSection>
-            <Style.SectionHeader>
-              <h3>포트폴리오 관리</h3>
-              <Style.AddButton>새 포트폴리오 추가</Style.AddButton>
-            </Style.SectionHeader>
-            <Style.DataTable>
-              <Style.TableHeader>
-                <th>ID</th>
-                <th>제목</th>
-                <th>분류</th>
-                <th>상태</th>
-                <th>작업</th>
-              </Style.TableHeader>
-              <Style.TableBody>
-                <tr>
-                  <td>1</td>
-                  <td>COVID-19 대시보드</td>
-                  <td>웹 개발</td>
-                  <td>
-                    <Style.StatusBadge active>활성</Style.StatusBadge>
-                  </td>
-                  <td>
-                    <Style.ActionButton edit>수정</Style.ActionButton>
-                    <Style.ActionButton delete>삭제</Style.ActionButton>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Netflix 클론</td>
-                  <td>웹 개발</td>
-                  <td>
-                    <Style.StatusBadge active>활성</Style.StatusBadge>
-                  </td>
-                  <td>
-                    <Style.ActionButton edit>수정</Style.ActionButton>
-                    <Style.ActionButton delete>삭제</Style.ActionButton>
-                  </td>
-                </tr>
-              </Style.TableBody>
-            </Style.DataTable>
-          </Style.PortfolioSection>
+          <PortfolioSection
+            initialPortfolios={portfolios}
+            onDataChange={handlePortfoliosChange}
+          />
         )}
 
         {activeTab === "story" && (
-          <Style.StorySection>
-            <Style.SectionHeader>
-              <h3>스토리 관리</h3>
-              <Style.AddButton>새 스토리 추가</Style.AddButton>
-            </Style.SectionHeader>
-            <Style.DataTable>
-              <Style.TableHeader>
-                <th>ID</th>
-                <th>내용</th>
-                <th>작성일</th>
-                <th>작업</th>
-              </Style.TableHeader>
-              <Style.TableBody>
-                <tr>
-                  <td>1</td>
-                  <td>여행 스토리 내용...</td>
-                  <td>2024-01-15</td>
-                  <td>
-                    <Style.ActionButton edit>수정</Style.ActionButton>
-                    <Style.ActionButton delete>삭제</Style.ActionButton>
-                  </td>
-                </tr>
-              </Style.TableBody>
-            </Style.DataTable>
-          </Style.StorySection>
+          <StorySection
+            initialStories={stories}
+            onDataChange={handleStoriesChange}
+          />
         )}
       </Style.AdminContent>
     </Style.AdminContainer>
