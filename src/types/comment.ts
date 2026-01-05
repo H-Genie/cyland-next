@@ -3,4 +3,5 @@ export interface Comment {
   comment: string;
   nickname: string;
   created_at: string;
+  active?: boolean;
 }

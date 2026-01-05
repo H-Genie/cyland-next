@@ -8,7 +8,7 @@ export interface TableColumn {
 }
 
 export interface TableAction {
-  label: string;
+  label: string | ((item: any) => string);
   type: "edit" | "delete" | "view";
   onClick: (item: any) => void;
 }
@@ -67,7 +67,9 @@ export default function DataTable({
                     delete={action.type === "delete"}
                     onClick={() => action.onClick(item)}
                   >
-                    {action.label}
+                    {typeof action.label === "function"
+                      ? action.label(item)
+                      : action.label}
                   </Style.ActionButton>
                 ))}
               </td>

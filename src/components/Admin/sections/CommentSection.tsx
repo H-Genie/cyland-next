@@ -4,17 +4,20 @@ import SectionHeader from "./SectionHeader";
 import DataTable, { TableColumn, TableAction } from "./DataTable";
 import { useComment } from "../../../hooks/queries/useComment";
 import { useCommentDelete } from "../../../hooks/queries/useCommentDelete";
+import { useCommentToggleActive } from "../../../hooks/queries/useCommentToggleActive";
 
 export interface Comment {
   id: number;
   nickname: string;
   comment: string; // API에서는 'comment' 필드 사용
   created_at: string; // API에서는 'created_at' 필드 사용
+  active?: boolean; // API에서는 'active' 필드 사용
 }
 
 export default function CommentSection() {
   const { data: apiComments, isLoading, isError } = useComment();
   const deleteCommentMutation = useCommentDelete();
+  const toggleActiveMutation = useCommentToggleActive();
   const [comments, setComments] = useState<Comment[]>([]);
 
   // API에서 데이터를 가져오면 상태 업데이트
@@ -53,11 +56,31 @@ export default function CommentSection() {
       }
     }
   };
+
+  const handleToggleActive = async (comment: Comment) => {
+    try {
+      const newActive = !comment.active;
+      await toggleActiveMutation.mutateAsync({
+        id: comment.id,
+        active: newActive
+      });
+
+      // 로컬 상태 업데이트
+      const newComments = comments.map(c =>
+        c.id === comment.id ? { ...c, active: newActive } : c
+      );
+      setComments(newComments);
+    } catch (error) {
+      console.error("댓글 active 상태 변경 실패:", error);
+      alert("상태 변경에 실패했습니다.");
+    }
+  };
   const columns: TableColumn[] = [
     { key: "id", label: "ID", width: "80px" },
     { key: "nickname", label: "닉네임", width: "120px" },
     { key: "comment", label: "댓글 내용" },
-    { key: "created_at", label: "작성일", width: "180px" }
+    { key: "created_at", label: "작성일", width: "180px" },
+    { key: "active", label: "상태", width: "100px" }
   ];
 
   const actions: TableAction[] = [
@@ -66,6 +89,11 @@ export default function CommentSection() {
     //   type: "edit",
     //   onClick: comment => handleEdit(comment)
     // },
+    {
+      label: comment => (comment.active ? "비활성화" : "활성화"),
+      type: "view",
+      onClick: comment => handleToggleActive(comment)
+    },
     {
       label: "삭제",
       type: "delete",
@@ -99,7 +127,17 @@ export default function CommentSection() {
 
   return (
     <Style.CommentSection>
-      <DataTable columns={columns} data={comments} actions={actions} />
+      <SectionHeader title="댓글 관리" />
+      <DataTable
+        columns={columns}
+        data={comments}
+        actions={actions}
+        statusColumn={{
+          key: "active",
+          activeValue: true,
+          inactiveValue: false
+        }}
+      />
     </Style.CommentSection>
   );
 }

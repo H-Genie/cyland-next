@@ -13,9 +13,11 @@ const CommentContainer = () => {
   return (
     <CommentsContainer>
       <InputComment />
-      {comments?.map((comment: Comment) => (
-        <Comments key={comment.id} comment={comment} />
-      ))}
+      {comments
+        ?.filter((comment: Comment) => comment.active !== false)
+        .map((comment: Comment) => (
+          <Comments key={comment.id} comment={comment} />
+        ))}
     </CommentsContainer>
   );
 };
