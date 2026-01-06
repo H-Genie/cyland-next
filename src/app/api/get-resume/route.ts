@@ -5,7 +5,7 @@ export async function GET() {
   const client = await pool.connect();
   try {
     const { rows } = await client.query(
-      `select content from resume order by id asc`
+      `select content, active from resume order by id asc`
     );
     return NextResponse.json(rows);
   } catch (err: unknown) {

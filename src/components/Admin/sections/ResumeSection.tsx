@@ -3,6 +3,8 @@ import * as Style from "../Admin.styles";
 import SectionHeader from "./SectionHeader";
 import DataTable, { TableColumn, TableAction } from "./DataTable";
 import { useResume } from "../../../hooks/queries/useResume";
+import { useResumeUpdate } from "../../../hooks/queries/useResumeUpdate";
+import { useResumeToggleActive } from "../../../hooks/queries/useResumeToggleActive";
 import ResumeEditModal from "./ResumeEditModal";
 
 export interface Resume {
@@ -11,6 +13,7 @@ export interface Resume {
   title?: string;
   category?: string;
   status?: boolean;
+  active?: boolean;
 }
 
 interface ResumeSectionProps {
@@ -23,6 +26,8 @@ export default function ResumeSection({
   onDataChange
 }: ResumeSectionProps) {
   const { data: apiResumes, isLoading, isError } = useResume();
+  const updateResumeMutation = useResumeUpdate();
+  const toggleActiveMutation = useResumeToggleActive();
   const [resumes, setResumes] = useState<Resume[]>(initialResumes || []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
@@ -54,21 +59,53 @@ export default function ResumeSection({
   };
 
   const handleSave = async (updatedResume: Resume) => {
+    if (!updatedResume.id || !updatedResume.content) {
+      alert("ID와 내용은 필수입니다.");
+      return;
+    }
+
     try {
-      // TODO: API 호출로 실제 수정
-      // await api.updateResume(updatedResume);
-      
+      await updateResumeMutation.mutateAsync({
+        id: updatedResume.id,
+        content: updatedResume.content
+      });
+
       // 로컬 상태 업데이트
       const newResumes = resumes.map(r =>
         r.id === updatedResume.id ? updatedResume : r
       );
       setResumes(newResumes);
       onDataChange?.(newResumes);
-      
-      console.log("이력서 수정 완료:", updatedResume);
+
+      alert("이력서가 성공적으로 수정되었습니다.");
     } catch (error) {
       console.error("이력서 수정 실패:", error);
       alert("이력서 수정에 실패했습니다.");
+    }
+  };
+
+  const handleToggleActive = async (resume: Resume) => {
+    if (!resume.id) {
+      alert("ID가 없습니다.");
+      return;
+    }
+
+    try {
+      const newActive = !resume.active;
+      await toggleActiveMutation.mutateAsync({
+        id: resume.id,
+        active: newActive
+      });
+
+      // 로컬 상태 업데이트
+      const newResumes = resumes.map(r =>
+        r.id === resume.id ? { ...r, active: newActive } : r
+      );
+      setResumes(newResumes);
+      onDataChange?.(newResumes);
+    } catch (error) {
+      console.error("이력서 active 상태 변경 실패:", error);
+      alert("상태 변경에 실패했습니다.");
     }
   };
 
@@ -81,7 +118,8 @@ export default function ResumeSection({
     // onDataChange?.(newResumes);
   };
   const columns: TableColumn[] = [
-    { key: "id", label: "ID", width: "80px" }
+    { key: "id", label: "ID", width: "80px" },
+    { key: "active", label: "상태", width: "100px" }
   ];
 
   const actions: TableAction[] = [
@@ -89,6 +127,11 @@ export default function ResumeSection({
       label: "수정",
       type: "edit",
       onClick: resume => handleEdit(resume)
+    },
+    {
+      label: resume => (resume.active ? "비활성화" : "활성화"),
+      type: "view",
+      onClick: resume => handleToggleActive(resume)
     },
     {
       label: "삭제",
@@ -133,6 +176,11 @@ export default function ResumeSection({
         columns={columns}
         data={resumes}
         actions={actions}
+        statusColumn={{
+          key: "active",
+          activeValue: true,
+          inactiveValue: false
+        }}
       />
       <ResumeEditModal
         isOpen={isModalOpen}

@@ -43,13 +43,15 @@ export default function ResumeBody() {
         </PlayButton>
       </VideoContainer>
 
-      {data?.map((item: { content: string }, index: number) => (
-        <Visitor
-          key={index + 1}
-          no={index + 1}
-          contents={<ReactJsxParser jsx={item.content} />}
-        />
-      ))}
+      {data
+        ?.filter((item: { active?: boolean }) => item.active !== false)
+        .map((item: { content: string }, index: number) => (
+          <Visitor
+            key={index + 1}
+            no={index + 1}
+            contents={<ReactJsxParser jsx={item.content} />}
+          />
+        ))}
     </Route>
   );
 }
