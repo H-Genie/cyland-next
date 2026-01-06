@@ -90,11 +90,6 @@ export default function CommentSection() {
     //   onClick: comment => handleEdit(comment)
     // },
     {
-      label: comment => (comment.active ? "비활성화" : "활성화"),
-      type: "view",
-      onClick: comment => handleToggleActive(comment)
-    },
-    {
       label: "삭제",
       type: "delete",
       onClick: comment => handleDelete(comment)
@@ -135,7 +130,8 @@ export default function CommentSection() {
         statusColumn={{
           key: "active",
           activeValue: true,
-          inactiveValue: false
+          inactiveValue: false,
+          onClick: comment => handleToggleActive(comment)
         }}
       />
     </Style.CommentSection>

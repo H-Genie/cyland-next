@@ -129,11 +129,6 @@ export default function ResumeSection({
       onClick: resume => handleEdit(resume)
     },
     {
-      label: resume => (resume.active ? "비활성화" : "활성화"),
-      type: "view",
-      onClick: resume => handleToggleActive(resume)
-    },
-    {
       label: "삭제",
       type: "delete",
       onClick: resume => handleDelete(resume)
@@ -179,7 +174,8 @@ export default function ResumeSection({
         statusColumn={{
           key: "active",
           activeValue: true,
-          inactiveValue: false
+          inactiveValue: false,
+          onClick: resume => handleToggleActive(resume)
         }}
       />
       <ResumeEditModal

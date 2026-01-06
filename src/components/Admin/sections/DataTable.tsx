@@ -21,6 +21,7 @@ interface DataTableProps {
     key: string;
     activeValue?: any;
     inactiveValue?: any;
+    onClick?: (item: any) => void;
   };
 }
 
@@ -48,6 +49,8 @@ export default function DataTable({
                 {statusColumn && column.key === statusColumn.key ? (
                   <Style.StatusBadge
                     active={item[column.key] === statusColumn.activeValue}
+                    onClick={() => statusColumn.onClick?.(item)}
+                    style={{ cursor: statusColumn.onClick ? "pointer" : "default" }}
                   >
                     {item[column.key] === statusColumn.activeValue
                       ? "활성"
