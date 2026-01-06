@@ -5,6 +5,7 @@ import DataTable, { TableColumn, TableAction } from "./DataTable";
 import { useResume } from "../../../hooks/queries/useResume";
 import { useResumeUpdate } from "../../../hooks/queries/useResumeUpdate";
 import { useResumeToggleActive } from "../../../hooks/queries/useResumeToggleActive";
+import { useResumeCreate } from "../../../hooks/queries/useResumeCreate";
 import ResumeEditModal from "./ResumeEditModal";
 
 export interface Resume {
@@ -27,10 +28,12 @@ export default function ResumeSection({
 }: ResumeSectionProps) {
   const { data: apiResumes, isLoading, isError } = useResume();
   const updateResumeMutation = useResumeUpdate();
+  const createResumeMutation = useResumeCreate();
   const toggleActiveMutation = useResumeToggleActive();
   const [resumes, setResumes] = useState<Resume[]>(initialResumes || []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
+  const [isNewResume, setIsNewResume] = useState(false);
 
   // API에서 데이터를 가져오면 상태 업데이트
   useEffect(() => {
@@ -45,42 +48,60 @@ export default function ResumeSection({
   }, [apiResumes]);
 
   const handleAdd = () => {
-    console.log("이력서 추가");
-    // TODO: 이력서 추가 로직
-    // const newResume = await api.createResume();
-    // const newResumes = [...resumes, newResume];
-    // setResumes(newResumes);
-    // onDataChange?.(newResumes);
+    setIsNewResume(true);
+    setSelectedResume(null);
+    setIsModalOpen(true);
   };
 
   const handleEdit = (resume: Resume) => {
+    setIsNewResume(false);
     setSelectedResume(resume);
     setIsModalOpen(true);
   };
 
-  const handleSave = async (updatedResume: Resume) => {
-    if (!updatedResume.id || !updatedResume.content) {
-      alert("ID와 내용은 필수입니다.");
+  const handleSave = async (resumeData: Resume) => {
+    if (!resumeData.content) {
+      alert("내용은 필수입니다.");
       return;
     }
 
     try {
-      await updateResumeMutation.mutateAsync({
-        id: updatedResume.id,
-        content: updatedResume.content
-      });
+      if (isNewResume) {
+        // 새로 추가
+        const newResume = await createResumeMutation.mutateAsync({
+          content: resumeData.content
+        });
 
-      // 로컬 상태 업데이트
-      const newResumes = resumes.map(r =>
-        r.id === updatedResume.id ? updatedResume : r
-      );
-      setResumes(newResumes);
-      onDataChange?.(newResumes);
+        // 로컬 상태 업데이트
+        const newResumes = [...resumes, newResume];
+        setResumes(newResumes);
+        onDataChange?.(newResumes);
 
-      alert("이력서가 성공적으로 수정되었습니다.");
+        alert("이력서가 성공적으로 추가되었습니다.");
+      } else {
+        // 수정
+        if (!resumeData.id) {
+          alert("ID가 필요합니다.");
+          return;
+        }
+
+        await updateResumeMutation.mutateAsync({
+          id: resumeData.id,
+          content: resumeData.content
+        });
+
+        // 로컬 상태 업데이트
+        const newResumes = resumes.map(r =>
+          r.id === resumeData.id ? resumeData : r
+        );
+        setResumes(newResumes);
+        onDataChange?.(newResumes);
+
+        alert("이력서가 성공적으로 수정되었습니다.");
+      }
     } catch (error) {
-      console.error("이력서 수정 실패:", error);
-      alert("이력서 수정에 실패했습니다.");
+      console.error(isNewResume ? "이력서 추가 실패:" : "이력서 수정 실패:", error);
+      alert(isNewResume ? "이력서 추가에 실패했습니다." : "이력서 수정에 실패했습니다.");
     }
   };
 
@@ -180,9 +201,13 @@ export default function ResumeSection({
       />
       <ResumeEditModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setIsNewResume(false);
+        }}
         resume={selectedResume}
         onSave={handleSave}
+        isNew={isNewResume}
       />
     </Style.ResumeSection>
   );

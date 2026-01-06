@@ -10,13 +10,15 @@ interface ResumeEditModalProps {
   onClose: () => void;
   resume: Resume | null;
   onSave: (resume: Resume) => void;
+  isNew?: boolean;
 }
 
 export default function ResumeEditModal({
   isOpen,
   onClose,
   resume,
-  onSave
+  onSave,
+  isNew = false
 }: ResumeEditModalProps) {
   const [formData, setFormData] = useState<Resume>({
     id: 0,
@@ -24,13 +26,20 @@ export default function ResumeEditModal({
   });
 
   useEffect(() => {
-    if (resume) {
+    if (isNew) {
+      // 새로 추가하는 경우 빈 폼으로 초기화
+      setFormData({
+        id: 0,
+        content: ""
+      });
+    } else if (resume) {
+      // 수정하는 경우 기존 데이터로 초기화
       setFormData({
         id: resume.id ?? 0,
         content: resume.content ?? ""
       });
     }
-  }, [resume]);
+  }, [resume, isNew]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +80,7 @@ export default function ResumeEditModal({
   return (
     <ReactModal isOpen={isOpen} onRequestClose={onClose} style={modalStyle}>
       <Style.ModalHeader>
-        <h3>이력서 수정</h3>
+        <h3>{isNew ? "새 이력서 추가" : "이력서 수정"}</h3>
         <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "24px", cursor: "pointer" }}>
           ×
         </button>
