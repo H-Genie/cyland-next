@@ -175,3 +175,113 @@ export const PortfolioSection = styled.div``;
 export const StorySection = styled.div``;
 export const CommentSection = styled.div``;
 export const ResumeSection = styled.div``;
+
+export const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+
+  h3 {
+    font-family: S-CoreDream-6Bold;
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+  }
+`;
+
+export const ModalFormGroup = styled.div`
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    font-family: S-CoreDream-5Medium;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+  }
+`;
+
+export const ModalInput = styled.input`
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: S-CoreDream-4Regular;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #85c8f2;
+  }
+`;
+
+export const ModalTextarea = styled.textarea`
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: S-CoreDream-4Regular;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  resize: vertical;
+
+  &:focus {
+    border-color: #85c8f2;
+  }
+`;
+
+export const ModalSelect = styled.select`
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: S-CoreDream-4Regular;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  background: white;
+  cursor: pointer;
+
+  &:focus {
+    border-color: #85c8f2;
+  }
+`;
+
+export const ModalButtonGroup = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 30px;
+`;
+
+export const ModalButton = styled.button<{ primary?: boolean }>`
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-family: S-CoreDream-5Medium;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  ${props =>
+    props.primary
+      ? `
+    background: #85c8f2;
+    color: white;
+    
+    &:hover {
+      background: #6bb6e8;
+    }
+  `
+      : `
+    background: #f0f0f0;
+    color: #333;
+    
+    &:hover {
+      background: #e0e0e0;
+    }
+  `}
+`;

@@ -79,12 +79,7 @@ export default function AdminPage() {
       <Style.AdminContent>
         {activeTab === "comment" && <CommentSection />}
 
-        {activeTab === "resume" && (
-          <ResumeSection
-            initialResumes={resumes}
-            onDataChange={handleResumesChange}
-          />
-        )}
+        {activeTab === "resume" && <ResumeSection />}
 
         {activeTab === "portfolio" && (
           <PortfolioSection

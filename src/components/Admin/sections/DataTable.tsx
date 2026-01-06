@@ -53,6 +53,8 @@ export default function DataTable({
                       ? "활성"
                       : "비활성"}
                   </Style.StatusBadge>
+                ) : column.key === "id" && (item[column.key] === undefined || item[column.key] === null) ? (
+                  index + 1
                 ) : (
                   item[column.key]
                 )}
