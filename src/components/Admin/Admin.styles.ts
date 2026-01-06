@@ -120,15 +120,25 @@ export const TableBody = styled.tbody`
 `;
 
 export const StatusBadge = styled.span<{ active: boolean }>`
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: 20px;
-  font-family: S-CoreDream-5Medium;
+  font-family: S-CoreDream-6Bold;
   font-size: 12px;
-  background: ${props => (props.active ? "#d4edda" : "#f8d7da")};
-  color: ${props => (props.active ? "#155724" : "#721c24")};
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: ${props => (props.active ? "#007bff" : "#dc3545")};
+  color: white;
+  box-shadow: ${props =>
+    props.active
+      ? "0 2px 4px rgba(0, 123, 255, 0.3)"
+      : "0 2px 4px rgba(220, 53, 69, 0.3)"};
+  transition: all 0.2s ease;
 `;
 
 export const ActionButton = styled.button<{ edit?: boolean; delete?: boolean }>`
+  width: 78px;
   padding: 8px 16px;
   margin-right: 8px;
   border: none;
