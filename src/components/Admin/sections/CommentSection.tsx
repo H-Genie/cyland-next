@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as Style from "../Admin.styles";
-import SectionHeader from "./SectionHeader";
-import DataTable, { TableColumn, TableAction } from "./DataTable";
+import SectionHeader from "../shared/SectionHeader";
+import DataTable, { TableColumn, TableAction } from "../shared/DataTable";
 import { useComment } from "../../../hooks/queries/useComment";
 import { useCommentDelete } from "../../../hooks/queries/useCommentDelete";
 import { useCommentToggleActive } from "../../../hooks/queries/useCommentToggleActive";

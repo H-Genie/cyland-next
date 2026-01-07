@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import * as Style from "../Admin.styles";
-import SectionHeader from "./SectionHeader";
-import DataTable, { TableColumn, TableAction } from "./DataTable";
+import SectionHeader from "../shared/SectionHeader";
+import DataTable, { TableColumn, TableAction } from "../shared/DataTable";
 import { useResume } from "../../../hooks/queries/useResume";
 import { useResumeUpdate } from "../../../hooks/queries/useResumeUpdate";
 import { useResumeToggleActive } from "../../../hooks/queries/useResumeToggleActive";
 import { useResumeCreate } from "../../../hooks/queries/useResumeCreate";
-import ResumeEditModal from "./ResumeEditModal";
+import ResumeEditModal from "../shared/ResumeEditModal";
 
 export interface Resume {
   id?: number;
+  name?: string;
   content?: string;
   title?: string;
   category?: string;
@@ -140,6 +141,7 @@ export default function ResumeSection({
   };
   const columns: TableColumn[] = [
     { key: "id", label: "ID", width: "80px" },
+    { key: "name", label: "이름" },
     { key: "active", label: "상태", width: "100px" }
   ];
 

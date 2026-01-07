@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactModal from "react-modal";
 import * as Style from "../Admin.styles";
-import type { Resume } from "./ResumeSection";
+import type { Resume } from "../sections/ResumeSection";
 
 ReactModal.setAppElement("body");
 

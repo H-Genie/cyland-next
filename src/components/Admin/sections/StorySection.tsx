@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import * as Style from "../Admin.styles";
-import SectionHeader from "./SectionHeader";
-import DataTable, { TableColumn, TableAction } from "./DataTable";
+import SectionHeader from "../shared/SectionHeader";
+import DataTable, { TableColumn, TableAction } from "../shared/DataTable";
 
 export interface Story {
   id: number;
