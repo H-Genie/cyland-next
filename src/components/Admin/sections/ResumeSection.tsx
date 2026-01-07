@@ -6,7 +6,7 @@ import { useResume } from "../../../hooks/queries/useResume";
 import { useResumeUpdate } from "../../../hooks/queries/useResumeUpdate";
 import { useResumeToggleActive } from "../../../hooks/queries/useResumeToggleActive";
 import { useResumeCreate } from "../../../hooks/queries/useResumeCreate";
-import ResumeEditModal from "../shared/ResumeEditModal";
+import ContentEditModal from "../shared/ContentEditModal";
 
 export interface Resume {
   id?: number;
@@ -39,12 +39,7 @@ export default function ResumeSection({
   // API에서 데이터를 가져오면 상태 업데이트
   useEffect(() => {
     if (apiResumes && Array.isArray(apiResumes)) {
-      // id가 없으면 index를 id로 사용
-      const resumesWithId = apiResumes.map((resume: any, index: number) => ({
-        ...resume,
-        id: resume.id ?? index + 1
-      }));
-      setResumes(resumesWithId);
+      setResumes(apiResumes);
     }
   }, [apiResumes]);
 
@@ -201,15 +196,16 @@ export default function ResumeSection({
           onClick: resume => handleToggleActive(resume)
         }}
       />
-      <ResumeEditModal
+      <ContentEditModal
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
           setIsNewResume(false);
         }}
-        resume={selectedResume}
+        item={selectedResume}
         onSave={handleSave}
         isNew={isNewResume}
+        title="이력서"
       />
     </Style.ResumeSection>
   );

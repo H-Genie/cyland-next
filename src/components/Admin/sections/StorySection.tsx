@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Style from "../Admin.styles";
 import SectionHeader from "../shared/SectionHeader";
 import DataTable, { TableColumn, TableAction } from "../shared/DataTable";
+import { useStory } from "../../../hooks/queries/useStory";
+import { useStoryUpdate } from "../../../hooks/queries/useStoryUpdate";
+import { useStoryToggleActive } from "../../../hooks/queries/useStoryToggleActive";
+import { useStoryCreate } from "../../../hooks/queries/useStoryCreate";
+import ContentEditModal from "../shared/ContentEditModal";
 
 export interface Story {
-  id: number;
-  content: string;
-  createdAt: string;
+  id?: number;
+  name?: string;
+  content?: string;
+  createdAt?: string;
+  active?: boolean;
 }
 
 interface StorySectionProps {
-  initialStories: Story[];
+  initialStories?: Story[];
   onDataChange?: (stories: Story[]) => void;
 }
 
@@ -18,24 +25,103 @@ export default function StorySection({
   initialStories,
   onDataChange
 }: StorySectionProps) {
-  const [stories, setStories] = useState<Story[]>(initialStories);
+  const { data: apiStories, isLoading, isError } = useStory();
+  const updateStoryMutation = useStoryUpdate();
+  const createStoryMutation = useStoryCreate();
+  const toggleActiveMutation = useStoryToggleActive();
+  const [stories, setStories] = useState<Story[]>(initialStories || []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedStory, setSelectedStory] = useState<Story | null>(null);
+  const [isNewStory, setIsNewStory] = useState(false);
+
+  // API에서 데이터를 가져오면 상태 업데이트
+  useEffect(() => {
+    if (apiStories && Array.isArray(apiStories)) {
+      setStories(apiStories);
+    }
+  }, [apiStories]);
 
   const handleAdd = () => {
-    console.log("스토리 추가");
-    // TODO: 스토리 추가 로직
-    // const newStory = await api.createStory();
-    // const newStories = [...stories, newStory];
-    // setStories(newStories);
-    // onDataChange?.(newStories);
+    setIsNewStory(true);
+    setSelectedStory(null);
+    setIsModalOpen(true);
   };
 
   const handleEdit = (story: Story) => {
-    console.log("스토리 수정:", story);
-    // TODO: 스토리 수정 로직
-    // const updatedStory = await api.updateStory(story);
-    // const newStories = stories.map(s => s.id === story.id ? updatedStory : s);
-    // setStories(newStories);
-    // onDataChange?.(newStories);
+    setIsNewStory(false);
+    setSelectedStory(story);
+    setIsModalOpen(true);
+  };
+
+  const handleSave = async (storyData: Story) => {
+    if (!storyData.content) {
+      alert("내용은 필수입니다.");
+      return;
+    }
+
+    try {
+      if (isNewStory) {
+        // 새로 추가
+        const newStory = await createStoryMutation.mutateAsync({
+          content: storyData.content
+        });
+
+        // 로컬 상태 업데이트
+        const newStories = [...stories, newStory];
+        setStories(newStories);
+        onDataChange?.(newStories);
+
+        alert("스토리가 성공적으로 추가되었습니다.");
+      } else {
+        // 수정
+        if (!storyData.id) {
+          alert("ID가 필요합니다.");
+          return;
+        }
+
+        await updateStoryMutation.mutateAsync({
+          id: storyData.id,
+          content: storyData.content
+        });
+
+        // 로컬 상태 업데이트
+        const newStories = stories.map(s =>
+          s.id === storyData.id ? storyData : s
+        );
+        setStories(newStories);
+        onDataChange?.(newStories);
+
+        alert("스토리가 성공적으로 수정되었습니다.");
+      }
+    } catch (error) {
+      console.error(isNewStory ? "스토리 추가 실패:" : "스토리 수정 실패:", error);
+      alert(isNewStory ? "스토리 추가에 실패했습니다." : "스토리 수정에 실패했습니다.");
+    }
+  };
+
+  const handleToggleActive = async (story: Story) => {
+    if (!story.id) {
+      alert("ID가 없습니다.");
+      return;
+    }
+
+    try {
+      const newActive = !story.active;
+      await toggleActiveMutation.mutateAsync({
+        id: story.id,
+        active: newActive
+      });
+
+      // 로컬 상태 업데이트
+      const newStories = stories.map(s =>
+        s.id === story.id ? { ...s, active: newActive } : s
+      );
+      setStories(newStories);
+      onDataChange?.(newStories);
+    } catch (error) {
+      console.error("스토리 active 상태 변경 실패:", error);
+      alert("상태 변경에 실패했습니다.");
+    }
   };
 
   const handleDelete = (story: Story) => {
@@ -48,8 +134,8 @@ export default function StorySection({
   };
   const columns: TableColumn[] = [
     { key: "id", label: "ID", width: "80px" },
-    { key: "content", label: "내용" },
-    { key: "createdAt", label: "작성일", width: "120px" }
+    { key: "name", label: "이름" },
+    { key: "active", label: "상태", width: "100px" }
   ];
 
   const actions: TableAction[] = [
@@ -65,6 +151,30 @@ export default function StorySection({
     }
   ];
 
+  // 로딩 상태 처리
+  if (isLoading) {
+    return (
+      <Style.StorySection>
+        <SectionHeader title="스토리 관리" />
+        <div style={{ textAlign: "center", padding: "40px" }}>
+          <p>스토리를 불러오는 중...</p>
+        </div>
+      </Style.StorySection>
+    );
+  }
+
+  // 에러 상태 처리
+  if (isError) {
+    return (
+      <Style.StorySection>
+        <SectionHeader title="스토리 관리" />
+        <div style={{ textAlign: "center", padding: "40px", color: "#dc3545" }}>
+          <p>스토리를 불러오는 중 오류가 발생했습니다.</p>
+        </div>
+      </Style.StorySection>
+    );
+  }
+
   return (
     <Style.StorySection>
       <SectionHeader
@@ -73,7 +183,28 @@ export default function StorySection({
         addButtonText="새 스토리 추가"
         onAddClick={handleAdd}
       />
-      <DataTable columns={columns} data={stories} actions={actions} />
+      <DataTable
+        columns={columns}
+        data={stories}
+        actions={actions}
+        statusColumn={{
+          key: "active",
+          activeValue: true,
+          inactiveValue: false,
+          onClick: story => handleToggleActive(story)
+        }}
+      />
+      <ContentEditModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setIsNewStory(false);
+        }}
+        item={selectedStory}
+        onSave={handleSave}
+        isNew={isNewStory}
+        title="스토리"
+      />
     </Style.StorySection>
   );
 }

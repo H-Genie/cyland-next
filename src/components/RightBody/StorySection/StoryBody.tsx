@@ -60,19 +60,21 @@ export default function StoryBody() {
   return (
     <>
       <Route>
-        {data.map((story: Story, index: number) => (
-          <Visitor
-            key={index}
-            no={index + 1}
-            contents={
-              <ReactJsxParser
-                jsx={story.content}
-                components={components as any}
-              />
-            }
-            notice={false}
-          />
-        ))}
+        {data
+          ?.filter((story: Story) => story.active !== false)
+          .map((story: Story, index: number) => (
+            <Visitor
+              key={index}
+              no={index + 1}
+              contents={
+                <ReactJsxParser
+                  jsx={story.content}
+                  components={components as any}
+                />
+              }
+              notice={false}
+            />
+          ))}
       </Route>
     </>
   );

@@ -88,12 +88,7 @@ export default function AdminPage() {
           />
         )}
 
-        {activeTab === "story" && (
-          <StorySection
-            initialStories={stories}
-            onDataChange={handleStoriesChange}
-          />
-        )}
+        {activeTab === "story" && <StorySection />}
       </Style.AdminContent>
     </Style.AdminContainer>
   );

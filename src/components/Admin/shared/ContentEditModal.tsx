@@ -1,26 +1,33 @@
 import React, { useState, useEffect } from "react";
 import ReactModal from "react-modal";
 import * as Style from "../Admin.styles";
-import type { Resume } from "../sections/ResumeSection";
 
 ReactModal.setAppElement("body");
 
-interface ResumeEditModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  resume: Resume | null;
-  onSave: (resume: Resume) => void;
-  isNew?: boolean;
+interface ContentItem {
+  id?: number;
+  content?: string;
+  [key: string]: any;
 }
 
-export default function ResumeEditModal({
+interface ContentEditModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  item: ContentItem | null;
+  onSave: (item: ContentItem) => void;
+  isNew?: boolean;
+  title: string; // "이력서" 또는 "스토리" 등
+}
+
+export default function ContentEditModal({
   isOpen,
   onClose,
-  resume,
+  item,
   onSave,
-  isNew = false
-}: ResumeEditModalProps) {
-  const [formData, setFormData] = useState<Resume>({
+  isNew = false,
+  title
+}: ContentEditModalProps) {
+  const [formData, setFormData] = useState<ContentItem>({
     id: 0,
     content: ""
   });
@@ -32,14 +39,14 @@ export default function ResumeEditModal({
         id: 0,
         content: ""
       });
-    } else if (resume) {
+    } else if (item) {
       // 수정하는 경우 기존 데이터로 초기화
       setFormData({
-        id: resume.id ?? 0,
-        content: resume.content ?? ""
+        id: item.id ?? 0,
+        content: item.content ?? ""
       });
     }
-  }, [resume, isNew]);
+  }, [item, isNew]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,7 +87,7 @@ export default function ResumeEditModal({
   return (
     <ReactModal isOpen={isOpen} onRequestClose={onClose} style={modalStyle}>
       <Style.ModalHeader>
-        <h3>{isNew ? "새 이력서 추가" : "이력서 수정"}</h3>
+        <h3>{isNew ? `새 ${title} 추가` : `${title} 수정`}</h3>
         <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "24px", cursor: "pointer" }}>
           ×
         </button>
