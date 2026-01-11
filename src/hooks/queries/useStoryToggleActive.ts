@@ -11,7 +11,7 @@ export const useStoryToggleActive = () => {
   return useMutation({
     mutationKey: ["story"],
     mutationFn: async (params: ToggleStoryActiveParams) => {
-      const res = await fetch("/api/update-story-active", {
+      const res = await fetch("/api/put-story-active", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"

@@ -11,7 +11,7 @@ export const useResumeToggleActive = () => {
   return useMutation({
     mutationKey: ["resume"],
     mutationFn: async (params: ToggleResumeActiveParams) => {
-      const res = await fetch("/api/update-resume-active", {
+      const res = await fetch("/api/put-resume-active", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"

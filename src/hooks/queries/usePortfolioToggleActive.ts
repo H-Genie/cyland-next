@@ -1,17 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface ToggleCommentActiveParams {
+interface TogglePortfolioActiveParams {
   id: number;
   active: boolean;
 }
 
-export const useCommentToggleActive = () => {
+export const usePortfolioToggleActive = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ["comments"],
-    mutationFn: async (params: ToggleCommentActiveParams) => {
-      const res = await fetch("/api/put-comment-active", {
+    mutationKey: ["portfolio"],
+    mutationFn: async (params: TogglePortfolioActiveParams) => {
+      const res = await fetch("/api/put-portfolio-active", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -25,11 +25,10 @@ export const useCommentToggleActive = () => {
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments"] });
+      queryClient.invalidateQueries({ queryKey: ["portfolio"] });
     },
     onError: error => {
-      console.error("댓글 active 상태 변경 실패:", error);
+      console.error("포트폴리오 active 상태 변경 실패:", error);
     }
   });
 };
-

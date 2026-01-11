@@ -16,7 +16,7 @@ export default function PortfolioBody() {
   const getClassificationCount = (classification: number) => {
     if (!data || !Array.isArray(data)) return 0;
     return data.filter((item: Portfolio) => {
-      return item.classification === classification.toString();
+      return item.classification === classification.toString() && item.active !== false;
     }).length;
   };
 
@@ -56,13 +56,15 @@ export default function PortfolioBody() {
         }
         notice={true}
       />
-      {data.map((visitor: Portfolio, index: number) => (
-        <Visitor
-          key={index + 1}
-          no={index + 1}
-          contents={<MakePortfolioVisitor data={{ ...visitor }} />}
-        />
-      ))}
+      {data
+        ?.filter((item: Portfolio) => item.active !== false)
+        .map((visitor: Portfolio, index: number) => (
+          <Visitor
+            key={index + 1}
+            no={index + 1}
+            contents={<MakePortfolioVisitor data={{ ...visitor }} />}
+          />
+        ))}
     </Route>
   );
 }

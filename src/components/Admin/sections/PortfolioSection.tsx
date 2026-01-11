@@ -3,6 +3,7 @@ import * as Style from "../Admin.styles";
 import SectionHeader from "../shared/SectionHeader";
 import DataTable, { TableColumn, TableAction } from "../shared/DataTable";
 import { usePortfolio } from "../../../hooks/queries/usePortfolio";
+import { usePortfolioToggleActive } from "../../../hooks/queries/usePortfolioToggleActive";
 
 export interface Portfolio {
   id?: number;
@@ -26,17 +27,13 @@ export default function PortfolioSection({
   onDataChange
 }: PortfolioSectionProps) {
   const { data: apiPortfolios, isLoading, isError } = usePortfolio();
+  const toggleActiveMutation = usePortfolioToggleActive();
   const [portfolios, setPortfolios] = useState<Portfolio[]>(initialPortfolios || []);
 
   // API에서 데이터를 가져오면 상태 업데이트
   useEffect(() => {
     if (apiPortfolios && Array.isArray(apiPortfolios)) {
-      // is_active를 active로 매핑
-      const portfoliosWithActive = apiPortfolios.map((portfolio: any) => ({
-        ...portfolio,
-        active: portfolio.is_active ?? portfolio.active ?? true
-      }));
-      setPortfolios(portfoliosWithActive);
+      setPortfolios(apiPortfolios);
     }
   }, [apiPortfolios]);
 
@@ -56,6 +53,31 @@ export default function PortfolioSection({
     // const newPortfolios = portfolios.map(p => p.id === portfolio.id ? updatedPortfolio : p);
     // setPortfolios(newPortfolios);
     // onDataChange?.(newPortfolios);
+  };
+
+  const handleToggleActive = async (portfolio: Portfolio) => {
+    if (!portfolio.id) {
+      alert("ID가 없습니다.");
+      return;
+    }
+
+    try {
+      const newActive = !portfolio.active;
+      await toggleActiveMutation.mutateAsync({
+        id: portfolio.id,
+        active: newActive
+      });
+
+      // 로컬 상태 업데이트
+      const newPortfolios = portfolios.map(p =>
+        p.id === portfolio.id ? { ...p, active: newActive } : p
+      );
+      setPortfolios(newPortfolios);
+      onDataChange?.(newPortfolios);
+    } catch (error) {
+      console.error("포트폴리오 active 상태 변경 실패:", error);
+      alert("상태 변경에 실패했습니다.");
+    }
   };
 
   const handleDelete = (portfolio: Portfolio) => {
@@ -124,7 +146,8 @@ export default function PortfolioSection({
         statusColumn={{
           key: "active",
           activeValue: true,
-          inactiveValue: false
+          inactiveValue: false,
+          onClick: portfolio => handleToggleActive(portfolio)
         }}
       />
     </Style.PortfolioSection>
