@@ -2,36 +2,17 @@
 import { useState, useEffect } from "react";
 import * as Style from "./Admin.styles";
 import CommentSection from "./sections/CommentSection";
-import ResumeSection, { Resume } from "./sections/ResumeSection";
-import PortfolioSection, { Portfolio } from "./sections/PortfolioSection";
-import StorySection, { Story } from "./sections/StorySection";
-import { mockResumes, mockPortfolios, mockStories } from "./data";
+import ResumeSection from "./sections/ResumeSection";
+import PortfolioSection from "./sections/PortfolioSection";
+import StorySection from "./sections/StorySection";
 
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("comment");
   const [isClient, setIsClient] = useState(false);
 
-  // 상태 관리 - 나중에 API에서 가져올 데이터
-  const [resumes, setResumes] = useState<Resume[]>(mockResumes);
-  const [portfolios, setPortfolios] = useState<Portfolio[]>(mockPortfolios);
-  const [stories, setStories] = useState<Story[]>(mockStories);
-
   useEffect(() => {
     setIsClient(true);
   }, []);
-
-  // 데이터 변경 핸들러들
-  const handleResumesChange = (newResumes: Resume[]) => {
-    setResumes(newResumes);
-  };
-
-  const handlePortfoliosChange = (newPortfolios: Portfolio[]) => {
-    setPortfolios(newPortfolios);
-  };
-
-  const handleStoriesChange = (newStories: Story[]) => {
-    setStories(newStories);
-  };
 
   if (!isClient) {
     return (

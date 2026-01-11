@@ -51,7 +51,7 @@ export default function PortfolioBody() {
           <>
             <p>{getProjectSummary()}</p>
             <br />
-            <MakePortfolioCarousel portfolioData={data} />
+            <MakePortfolioCarousel portfolioData={data?.filter((item: Portfolio) => item.active !== false)} />
           </>
         }
         notice={true}

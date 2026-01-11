@@ -4,13 +4,19 @@ import SectionHeader from "../shared/SectionHeader";
 import DataTable, { TableColumn, TableAction } from "../shared/DataTable";
 import { usePortfolio } from "../../../hooks/queries/usePortfolio";
 import { usePortfolioToggleActive } from "../../../hooks/queries/usePortfolioToggleActive";
+import PortfolioEditModal from "../shared/PortfolioEditModal";
 
 export interface Portfolio {
-  id?: number;
+  id?: number | string;
   name?: string;
-  title?: string;
-  category?: string;
+  link?: string;
+  thumbnail?: string;
   classification?: string;
+  language?: string;
+  description?: string;
+  study?: string;
+  range?: string;
+  sublink?: { [key: string]: string };
   classification_label?: string;
   status?: boolean;
   is_active?: boolean;
@@ -29,6 +35,9 @@ export default function PortfolioSection({
   const { data: apiPortfolios, isLoading, isError } = usePortfolio();
   const toggleActiveMutation = usePortfolioToggleActive();
   const [portfolios, setPortfolios] = useState<Portfolio[]>(initialPortfolios || []);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio | null>(null);
+  const [isNewPortfolio, setIsNewPortfolio] = useState(false);
 
   // API에서 데이터를 가져오면 상태 업데이트
   useEffect(() => {
@@ -38,21 +47,33 @@ export default function PortfolioSection({
   }, [apiPortfolios]);
 
   const handleAdd = () => {
-    console.log("포트폴리오 추가");
-    // TODO: 포트폴리오 추가 로직
-    // const newPortfolio = await api.createPortfolio();
-    // const newPortfolios = [...portfolios, newPortfolio];
-    // setPortfolios(newPortfolios);
-    // onDataChange?.(newPortfolios);
+    setIsNewPortfolio(true);
+    setSelectedPortfolio(null);
+    setIsModalOpen(true);
   };
 
   const handleEdit = (portfolio: Portfolio) => {
-    console.log("포트폴리오 수정:", portfolio);
-    // TODO: 포트폴리오 수정 로직
-    // const updatedPortfolio = await api.updatePortfolio(portfolio);
-    // const newPortfolios = portfolios.map(p => p.id === portfolio.id ? updatedPortfolio : p);
-    // setPortfolios(newPortfolios);
-    // onDataChange?.(newPortfolios);
+    setIsNewPortfolio(false);
+    setSelectedPortfolio(portfolio);
+    setIsModalOpen(true);
+  };
+
+  const handleSave = async (portfolioData: Portfolio) => {
+    if (!portfolioData.name || !portfolioData.link || !portfolioData.thumbnail) {
+      alert("이름, 링크, 썸네일은 필수입니다.");
+      return;
+    }
+
+    try {
+      // TODO: API 호출 로직 추가
+      console.log("포트폴리오 저장:", portfolioData);
+      alert("포트폴리오 저장 기능은 곧 구현될 예정입니다.");
+      setIsModalOpen(false);
+      setIsNewPortfolio(false);
+    } catch (error) {
+      console.error("포트폴리오 저장 실패:", error);
+      alert("포트폴리오 저장에 실패했습니다.");
+    }
   };
 
   const handleToggleActive = async (portfolio: Portfolio) => {
@@ -64,7 +85,7 @@ export default function PortfolioSection({
     try {
       const newActive = !portfolio.active;
       await toggleActiveMutation.mutateAsync({
-        id: portfolio.id,
+        id: typeof portfolio.id === "string" ? parseInt(portfolio.id) : portfolio.id,
         active: newActive
       });
 
@@ -149,6 +170,16 @@ export default function PortfolioSection({
           inactiveValue: false,
           onClick: portfolio => handleToggleActive(portfolio)
         }}
+      />
+      <PortfolioEditModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setIsNewPortfolio(false);
+        }}
+        portfolio={selectedPortfolio}
+        onSave={handleSave}
+        isNew={isNewPortfolio}
       />
     </Style.PortfolioSection>
   );

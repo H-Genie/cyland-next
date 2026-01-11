@@ -11,7 +11,6 @@ export interface Portfolio {
   sublink: {
     [key: string]: string;
   };
-  is_active?: boolean;
   active?: boolean;
   classification_label: string;
 }
