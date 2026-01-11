@@ -10,7 +10,6 @@ export async function GET() {
         c.name as classification_label
       from portfolio p
       LEFT JOIN classification c ON p.classification = c.classification
-      WHERE p.is_active = true 
       order by p.id
       `);
     return NextResponse.json(rows);

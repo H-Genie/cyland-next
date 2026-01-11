@@ -81,12 +81,7 @@ export default function AdminPage() {
 
         {activeTab === "resume" && <ResumeSection />}
 
-        {activeTab === "portfolio" && (
-          <PortfolioSection
-            initialPortfolios={portfolios}
-            onDataChange={handlePortfoliosChange}
-          />
-        )}
+        {activeTab === "portfolio" && <PortfolioSection />}
 
         {activeTab === "story" && <StorySection />}
       </Style.AdminContent>
