@@ -4,6 +4,7 @@ import SectionHeader from "../shared/SectionHeader";
 import DataTable, { TableColumn, TableAction } from "../shared/DataTable";
 import { usePortfolio } from "../../../hooks/queries/usePortfolio";
 import { usePortfolioToggleActive } from "../../../hooks/queries/usePortfolioToggleActive";
+import { usePortfolioDelete } from "../../../hooks/queries/usePortfolioDelete";
 import PortfolioEditModal from "../shared/PortfolioEditModal";
 
 export interface Portfolio {
@@ -34,6 +35,7 @@ export default function PortfolioSection({
 }: PortfolioSectionProps) {
   const { data: apiPortfolios, isLoading, isError } = usePortfolio();
   const toggleActiveMutation = usePortfolioToggleActive();
+  const deletePortfolioMutation = usePortfolioDelete();
   const [portfolios, setPortfolios] = useState<Portfolio[]>(initialPortfolios || []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio | null>(null);
@@ -101,13 +103,31 @@ export default function PortfolioSection({
     }
   };
 
-  const handleDelete = (portfolio: Portfolio) => {
-    console.log("포트폴리오 삭제:", portfolio);
-    // TODO: 포트폴리오 삭제 로직
-    // await api.deletePortfolio(portfolio.id);
-    // const newPortfolios = portfolios.filter(p => p.id !== portfolio.id);
-    // setPortfolios(newPortfolios);
-    // onDataChange?.(newPortfolios);
+  const handleDelete = async (portfolio: Portfolio) => {
+    if (!portfolio.id) {
+      alert("ID가 없습니다.");
+      return;
+    }
+
+    if (!confirm("정말로 이 포트폴리오를 삭제하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      await deletePortfolioMutation.mutateAsync({
+        id: typeof portfolio.id === "string" ? parseInt(portfolio.id) : portfolio.id
+      });
+
+      // 로컬 상태 업데이트
+      const newPortfolios = portfolios.filter(p => p.id !== portfolio.id);
+      setPortfolios(newPortfolios);
+      onDataChange?.(newPortfolios);
+
+      alert("포트폴리오가 성공적으로 삭제되었습니다.");
+    } catch (error) {
+      console.error("포트폴리오 삭제 실패:", error);
+      alert("포트폴리오 삭제에 실패했습니다.");
+    }
   };
   const columns: TableColumn[] = [
     { key: "id", label: "ID", width: "80px" },

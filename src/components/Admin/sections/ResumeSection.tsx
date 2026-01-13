@@ -6,6 +6,7 @@ import { useResume } from "../../../hooks/queries/useResume";
 import { useResumeUpdate } from "../../../hooks/queries/useResumeUpdate";
 import { useResumeToggleActive } from "../../../hooks/queries/useResumeToggleActive";
 import { useResumeCreate } from "../../../hooks/queries/useResumeCreate";
+import { useResumeDelete } from "../../../hooks/queries/useResumeDelete";
 import ContentEditModal from "../shared/ContentEditModal";
 
 export interface Resume {
@@ -31,6 +32,7 @@ export default function ResumeSection({
   const updateResumeMutation = useResumeUpdate();
   const createResumeMutation = useResumeCreate();
   const toggleActiveMutation = useResumeToggleActive();
+  const deleteResumeMutation = useResumeDelete();
   const [resumes, setResumes] = useState<Resume[]>(initialResumes || []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
@@ -126,13 +128,31 @@ export default function ResumeSection({
     }
   };
 
-  const handleDelete = (resume: Resume) => {
-    console.log("이력서 삭제:", resume);
-    // TODO: 이력서 삭제 로직
-    // await api.deleteResume(resume.id);
-    // const newResumes = resumes.filter(r => r.id !== resume.id);
-    // setResumes(newResumes);
-    // onDataChange?.(newResumes);
+  const handleDelete = async (resume: Resume) => {
+    if (!resume.id) {
+      alert("ID가 없습니다.");
+      return;
+    }
+
+    if (!confirm("정말로 이 이력서를 삭제하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      await deleteResumeMutation.mutateAsync({
+        id: resume.id
+      });
+
+      // 로컬 상태 업데이트
+      const newResumes = resumes.filter(r => r.id !== resume.id);
+      setResumes(newResumes);
+      onDataChange?.(newResumes);
+
+      alert("이력서가 성공적으로 삭제되었습니다.");
+    } catch (error) {
+      console.error("이력서 삭제 실패:", error);
+      alert("이력서 삭제에 실패했습니다.");
+    }
   };
   const columns: TableColumn[] = [
     { key: "id", label: "ID", width: "80px" },

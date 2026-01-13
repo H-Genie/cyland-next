@@ -6,6 +6,7 @@ import { useStory } from "../../../hooks/queries/useStory";
 import { useStoryUpdate } from "../../../hooks/queries/useStoryUpdate";
 import { useStoryToggleActive } from "../../../hooks/queries/useStoryToggleActive";
 import { useStoryCreate } from "../../../hooks/queries/useStoryCreate";
+import { useStoryDelete } from "../../../hooks/queries/useStoryDelete";
 import ContentEditModal from "../shared/ContentEditModal";
 
 export interface Story {
@@ -29,6 +30,7 @@ export default function StorySection({
   const updateStoryMutation = useStoryUpdate();
   const createStoryMutation = useStoryCreate();
   const toggleActiveMutation = useStoryToggleActive();
+  const deleteStoryMutation = useStoryDelete();
   const [stories, setStories] = useState<Story[]>(initialStories || []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
@@ -124,13 +126,31 @@ export default function StorySection({
     }
   };
 
-  const handleDelete = (story: Story) => {
-    console.log("스토리 삭제:", story);
-    // TODO: 스토리 삭제 로직
-    // await api.deleteStory(story.id);
-    // const newStories = stories.filter(s => s.id !== story.id);
-    // setStories(newStories);
-    // onDataChange?.(newStories);
+  const handleDelete = async (story: Story) => {
+    if (!story.id) {
+      alert("ID가 없습니다.");
+      return;
+    }
+
+    if (!confirm("정말로 이 스토리를 삭제하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      await deleteStoryMutation.mutateAsync({
+        id: story.id
+      });
+
+      // 로컬 상태 업데이트
+      const newStories = stories.filter(s => s.id !== story.id);
+      setStories(newStories);
+      onDataChange?.(newStories);
+
+      alert("스토리가 성공적으로 삭제되었습니다.");
+    } catch (error) {
+      console.error("스토리 삭제 실패:", error);
+      alert("스토리 삭제에 실패했습니다.");
+    }
   };
   const columns: TableColumn[] = [
     { key: "id", label: "ID", width: "80px" },
