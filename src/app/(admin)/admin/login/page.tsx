@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { encryptAES } from "utils/crypto";
 import styled from "@emotion/styled";
 
 const LoginContainer = styled.div`
@@ -106,12 +107,15 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      // 클라이언트에서 비밀번호 암호화
+      const encryptedPassword = encryptAES(password);
+
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password: encryptedPassword })
       });
 
       const data = await response.json();

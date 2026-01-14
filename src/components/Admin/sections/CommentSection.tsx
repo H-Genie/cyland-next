@@ -39,10 +39,9 @@ export default function CommentSection() {
   const handleDelete = async (comment: Comment) => {
     if (window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
       try {
-        // 관리자 비밀번호를 사용하여 삭제 (실제 환경에서는 적절한 인증 방식 사용)
+        // 관리자는 비밀번호 없이 삭제 가능
         await deleteCommentMutation.mutateAsync({
-          id: comment.id,
-          password: "admin" // 임시 관리자 비밀번호
+          id: comment.id
         });
 
         // 삭제 성공 시 로컬 상태도 업데이트

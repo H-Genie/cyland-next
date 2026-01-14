@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { pool } from "utils/db";
 
+export const dynamic = "force-dynamic";
+
 export async function DELETE(req: Request) {
   const { id } = await req.json();
 
@@ -19,7 +21,9 @@ export async function DELETE(req: Request) {
       return NextResponse.json("Portfolio not found", { status: 404 });
     }
 
-    return NextResponse.json({ id: rows[0].id });
+    const response = NextResponse.json({ id: rows[0].id });
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    return response;
   } catch (err: unknown) {
     console.error("포트폴리오 삭제 실패:", err);
     return NextResponse.json(err, { status: 500 });

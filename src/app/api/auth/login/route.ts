@@ -33,11 +33,14 @@ export async function POST(req: Request) {
 
       const admin = rows[0];
 
-      // 비밀번호 확인 (AES 복호화하여 비교)
+      // 비밀번호 확인 (클라이언트에서 암호화된 비밀번호와 DB의 암호화된 비밀번호 비교)
       try {
-        const decryptedPassword = decryptAES(admin.password);
+        // 클라이언트에서 전송된 암호화된 비밀번호 복호화
+        const decryptedClientPassword = decryptAES(password);
+        // DB에 저장된 암호화된 비밀번호 복호화
+        const decryptedDbPassword = decryptAES(admin.password);
 
-        if (password !== decryptedPassword) {
+        if (decryptedClientPassword !== decryptedDbPassword) {
           return NextResponse.json(
             { error: "사용자명 또는 비밀번호가 올바르지 않습니다." },
             { status: 401 }
