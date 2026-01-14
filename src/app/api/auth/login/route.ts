@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import { pool } from "utils/db";
 import { decryptAES } from "utils/crypto";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   try {
     const { username, password } = await req.json();

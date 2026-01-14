@@ -14,8 +14,10 @@ export const useCommentToggleActive = () => {
       const res = await fetch("/api/put-comment-active", {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache"
         },
+        cache: "no-store",
         body: JSON.stringify(params)
       });
       if (!res.ok) {
@@ -26,6 +28,7 @@ export const useCommentToggleActive = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments"] });
+      queryClient.refetchQueries({ queryKey: ["comments"] });
     },
     onError: error => {
       console.error("댓글 active 상태 변경 실패:", error);

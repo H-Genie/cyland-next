@@ -14,8 +14,10 @@ export const usePortfolioToggleActive = () => {
       const res = await fetch("/api/put-portfolio-active", {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache"
         },
+        cache: "no-store",
         body: JSON.stringify(params)
       });
       if (!res.ok) {
@@ -26,6 +28,7 @@ export const usePortfolioToggleActive = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["portfolio"] });
+      queryClient.refetchQueries({ queryKey: ["portfolio"] });
     },
     onError: error => {
       console.error("포트폴리오 active 상태 변경 실패:", error);

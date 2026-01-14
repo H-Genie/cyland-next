@@ -14,8 +14,10 @@ export const useResumeToggleActive = () => {
       const res = await fetch("/api/put-resume-active", {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache"
         },
+        cache: "no-store",
         body: JSON.stringify(params)
       });
       if (!res.ok) {
@@ -26,6 +28,7 @@ export const useResumeToggleActive = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["resume"] });
+      queryClient.refetchQueries({ queryKey: ["resume"] });
     },
     onError: error => {
       console.error("이력서 active 상태 변경 실패:", error);
