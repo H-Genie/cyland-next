@@ -5,6 +5,8 @@ import DataTable, { TableColumn, TableAction } from "../shared/DataTable";
 import { usePortfolio } from "../../../hooks/queries/usePortfolio";
 import { usePortfolioToggleActive } from "../../../hooks/queries/usePortfolioToggleActive";
 import { usePortfolioDelete } from "../../../hooks/queries/usePortfolioDelete";
+import { usePortfolioUpdate } from "../../../hooks/queries/usePortfolioUpdate";
+import { usePortfolioCreate } from "../../../hooks/queries/usePortfolioCreate";
 import PortfolioEditModal from "../shared/PortfolioEditModal";
 
 export interface Portfolio {
@@ -36,6 +38,8 @@ export default function PortfolioSection({
   const { data: apiPortfolios, isLoading, isError } = usePortfolio();
   const toggleActiveMutation = usePortfolioToggleActive();
   const deletePortfolioMutation = usePortfolioDelete();
+  const updatePortfolioMutation = usePortfolioUpdate();
+  const createPortfolioMutation = usePortfolioCreate();
   const [portfolios, setPortfolios] = useState<Portfolio[]>(initialPortfolios || []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio | null>(null);
@@ -67,9 +71,56 @@ export default function PortfolioSection({
     }
 
     try {
-      // TODO: API 호출 로직 추가
-      console.log("포트폴리오 저장:", portfolioData);
-      alert("포트폴리오 저장 기능은 곧 구현될 예정입니다.");
+      if (isNewPortfolio) {
+        // 새 포트폴리오 생성
+        const newPortfolio = await createPortfolioMutation.mutateAsync({
+          name: portfolioData.name,
+          link: portfolioData.link,
+          thumbnail: portfolioData.thumbnail,
+          classification: portfolioData.classification || "1",
+          language: portfolioData.language || "",
+          description: portfolioData.description || "",
+          study: portfolioData.study || "",
+          range: portfolioData.range || "",
+          sublink: portfolioData.sublink || {},
+          active: portfolioData.active !== undefined ? portfolioData.active : true
+        });
+
+        // 로컬 상태 업데이트
+        const newPortfolios = [...portfolios, newPortfolio];
+        setPortfolios(newPortfolios);
+        onDataChange?.(newPortfolios);
+        alert("포트폴리오가 성공적으로 생성되었습니다.");
+      } else {
+        // 기존 포트폴리오 수정
+        if (!portfolioData.id) {
+          alert("포트폴리오 ID가 없습니다.");
+          return;
+        }
+
+        const updatedPortfolio = await updatePortfolioMutation.mutateAsync({
+          id: typeof portfolioData.id === "string" ? parseInt(portfolioData.id) : portfolioData.id,
+          name: portfolioData.name,
+          link: portfolioData.link,
+          thumbnail: portfolioData.thumbnail,
+          classification: portfolioData.classification || "1",
+          language: portfolioData.language || "",
+          description: portfolioData.description || "",
+          study: portfolioData.study || "",
+          range: portfolioData.range || "",
+          sublink: portfolioData.sublink || {},
+          active: portfolioData.active !== undefined ? portfolioData.active : true
+        });
+
+        // 로컬 상태 업데이트
+        const newPortfolios = portfolios.map(p =>
+          p.id === portfolioData.id ? { ...updatedPortfolio, classification_label: p.classification_label } : p
+        );
+        setPortfolios(newPortfolios);
+        onDataChange?.(newPortfolios);
+        alert("포트폴리오가 성공적으로 수정되었습니다.");
+      }
+
       setIsModalOpen(false);
       setIsNewPortfolio(false);
     } catch (error) {

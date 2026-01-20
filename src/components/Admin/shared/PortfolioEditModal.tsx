@@ -272,7 +272,6 @@ export default function PortfolioEditModal({
                 style={{ flex: 1 }}
               />
               <Style.ModalInput
-                type="url"
                 placeholder="URL"
                 value={entry.value}
                 onChange={e => handleSublinkChange(index, "value", e.target.value)}
