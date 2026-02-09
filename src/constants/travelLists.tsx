@@ -21,7 +21,15 @@ const travelLists = [
   new Travel("hoian", "Viet Nam - Hoi an"),
   new Travel("jangjiajie", "China - Jangjiajie"),
   new Travel("osaka", "Japan - Osaka"),
-  new Travel("kyoto", "Japan - Kyoto")
+  new Travel("kyoto", "Japan - Kyoto"),
+  new Travel("paris", "France - Paris"),
+  new Travel("luzern", "Swiss - Luzern"),
+  new Travel("alphs", "Swiss - Alphs"),
+  new Travel("venezia", "Italy - Venezia"),
+  new Travel("firenze", "Italy - Firenze"),
+  new Travel("amalfi", "Italy - Amalfi"),
+  new Travel("vatican", "Vatican"),
+  new Travel("roma", "Italy - Roma"),
 ];
 
 export default travelLists;
