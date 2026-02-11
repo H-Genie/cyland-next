@@ -9,6 +9,7 @@ export async function PUT(req: Request) {
     name,
     link,
     thumbnail,
+    thumbnail_delete_url,
     classification,
     language,
     description,
@@ -29,16 +30,17 @@ export async function PUT(req: Request) {
 
     const { rows } = await client.query(
       `UPDATE portfolio 
-       SET name = $1, link = $2, thumbnail = $3, classification = $4, 
-           language = $5, description = $6, study = $7, range = $8, 
-           sublink = $9, active = $10
-       WHERE id = $11 
-       RETURNING id, name, link, thumbnail, classification, language, 
+       SET name = $1, link = $2, thumbnail = $3, thumbnail_delete_url = $4, classification = $5, 
+           language = $6, description = $7, study = $8, range = $9, 
+           sublink = $10, active = $11
+       WHERE id = $12 
+       RETURNING id, name, link, thumbnail, thumbnail_delete_url, classification, language, 
                  description, study, range, sublink, active`,
       [
         name,
         link,
         thumbnail,
+        thumbnail_delete_url ?? null,
         classification || null,
         language || null,
         description || null,

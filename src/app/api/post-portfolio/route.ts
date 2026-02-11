@@ -8,6 +8,7 @@ export async function POST(req: Request) {
     name,
     link,
     thumbnail,
+    thumbnail_delete_url,
     classification,
     language,
     description,
@@ -28,14 +29,15 @@ export async function POST(req: Request) {
 
     const { rows } = await client.query(
       `INSERT INTO portfolio 
-       (name, link, thumbnail, classification, language, description, study, range, sublink, active)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-       RETURNING id, name, link, thumbnail, classification, language, 
+       (name, link, thumbnail, thumbnail_delete_url, classification, language, description, study, range, sublink, active)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+       RETURNING id, name, link, thumbnail, thumbnail_delete_url, classification, language, 
                  description, study, range, sublink, active`,
       [
         name,
         link,
         thumbnail,
+        thumbnail_delete_url || null,
         classification || null,
         language || null,
         description || null,

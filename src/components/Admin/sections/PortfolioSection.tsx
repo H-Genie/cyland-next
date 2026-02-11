@@ -14,6 +14,8 @@ export interface Portfolio {
   name?: string;
   link?: string;
   thumbnail?: string;
+  /** imgBB 업로드 시 응답의 data.delete_url (이미지 삭제용) */
+  thumbnail_delete_url?: string;
   classification?: string;
   language?: string;
   description?: string;
@@ -77,6 +79,7 @@ export default function PortfolioSection({
           name: portfolioData.name,
           link: portfolioData.link,
           thumbnail: portfolioData.thumbnail,
+          thumbnail_delete_url: portfolioData.thumbnail_delete_url || undefined,
           classification: portfolioData.classification || "1",
           language: portfolioData.language || "",
           description: portfolioData.description || "",
@@ -103,6 +106,7 @@ export default function PortfolioSection({
           name: portfolioData.name,
           link: portfolioData.link,
           thumbnail: portfolioData.thumbnail,
+          thumbnail_delete_url: portfolioData.thumbnail_delete_url || undefined,
           classification: portfolioData.classification || "1",
           language: portfolioData.language || "",
           description: portfolioData.description || "",

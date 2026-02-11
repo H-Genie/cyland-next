@@ -25,6 +25,7 @@ export default function PortfolioEditModal({
     name: "",
     link: "",
     thumbnail: "",
+    thumbnail_delete_url: "",
     classification: "1",
     language: "",
     description: "",
@@ -34,7 +35,11 @@ export default function PortfolioEditModal({
     active: true
   });
 
-  const [sublinkEntries, setSublinkEntries] = useState<Array<{ key: string; value: string }>>([]);
+  const [sublinkEntries, setSublinkEntries] = useState<
+    Array<{ key: string; value: string }>
+  >([]);
+  const [thumbnailUploading, setThumbnailUploading] = useState(false);
+  const [thumbnailError, setThumbnailError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isNew) {
@@ -43,6 +48,7 @@ export default function PortfolioEditModal({
         name: "",
         link: "",
         thumbnail: "",
+        thumbnail_delete_url: "",
         classification: "1",
         language: "",
         description: "",
@@ -52,12 +58,14 @@ export default function PortfolioEditModal({
         active: true
       });
       setSublinkEntries([{ key: "", value: "" }]);
+      setThumbnailError(null);
     } else if (portfolio) {
       setFormData({
         id: portfolio.id ?? "",
         name: portfolio.name ?? "",
         link: portfolio.link ?? "",
         thumbnail: portfolio.thumbnail ?? "",
+        thumbnail_delete_url: portfolio.thumbnail_delete_url ?? "",
         classification: portfolio.classification ?? "1",
         language: portfolio.language ?? "",
         description: portfolio.description ?? "",
@@ -68,15 +76,66 @@ export default function PortfolioEditModal({
       });
       // sublink 객체를 배열로 변환
       const sublinkArray = portfolio.sublink
-        ? Object.entries(portfolio.sublink).map(([key, value]) => ({ key, value }))
+        ? Object.entries(portfolio.sublink).map(([key, value]) => ({
+            key,
+            value
+          }))
         : [];
-      setSublinkEntries(sublinkArray.length > 0 ? sublinkArray : [{ key: "", value: "" }]);
+      setSublinkEntries(
+        sublinkArray.length > 0 ? sublinkArray : [{ key: "", value: "" }]
+      );
+      setThumbnailError(null);
     }
   }, [portfolio, isNew]);
 
+  const handleThumbnailFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file || !file.type.startsWith("image/")) {
+      setThumbnailError("이미지 파일을 선택해주세요.");
+      return;
+    }
+    setThumbnailError(null);
+    setThumbnailUploading(true);
+
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append("image", file);
+      if (file.name) formDataUpload.append("name", file.name);
+
+      const res = await fetch("/api/upload-image", {
+        method: "POST",
+        body: formDataUpload
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setThumbnailError(data?.error ?? "이미지 업로드에 실패했습니다.");
+        setThumbnailUploading(false);
+        return;
+      }
+
+      // imgBB 응답: data.display_url(직접 링크), data.delete_url(삭제용)
+      if (data.success && data.url) {
+        setFormData(prev => ({
+          ...prev,
+          thumbnail: data.url,
+          thumbnail_delete_url: data.deleteUrl ?? ""
+        }));
+      }
+    } catch (err) {
+      setThumbnailError("이미지 업로드 중 오류가 발생했습니다.");
+    } finally {
+      setThumbnailUploading(false);
+      e.target.value = "";
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // sublink 배열을 객체로 변환
     const sublinkObj: { [key: string]: string } = {};
     sublinkEntries.forEach(entry => {
@@ -95,7 +154,9 @@ export default function PortfolioEditModal({
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -104,7 +165,11 @@ export default function PortfolioEditModal({
     }));
   };
 
-  const handleSublinkChange = (index: number, field: "key" | "value", value: string) => {
+  const handleSublinkChange = (
+    index: number,
+    field: "key" | "value",
+    value: string
+  ) => {
     const newEntries = [...sublinkEntries];
     newEntries[index] = { ...newEntries[index], [field]: value };
     setSublinkEntries(newEntries);
@@ -142,7 +207,15 @@ export default function PortfolioEditModal({
     <ReactModal isOpen={isOpen} onRequestClose={onClose} style={modalStyle}>
       <Style.ModalHeader>
         <h3>{isNew ? "새 포트폴리오 추가" : "포트폴리오 수정"}</h3>
-        <button onClick={onClose} style={{ background: "none", border: "none", fontSize: "24px", cursor: "pointer" }}>
+        <button
+          onClick={onClose}
+          style={{
+            background: "none",
+            border: "none",
+            fontSize: "24px",
+            cursor: "pointer"
+          }}
+        >
           ×
         </button>
       </Style.ModalHeader>
@@ -170,14 +243,76 @@ export default function PortfolioEditModal({
         </Style.ModalFormGroup>
 
         <Style.ModalFormGroup>
-          <label>썸네일 경로 *</label>
-          <Style.ModalInput
-            type="text"
-            name="thumbnail"
-            value={formData.thumbnail || ""}
-            onChange={handleChange}
-            required
-          />
+          <label>썸네일 *</label>
+          {formData.thumbnail ? (
+            <div style={{ marginBottom: 10 }}>
+              <img
+                src={formData.thumbnail}
+                alt="썸네일 미리보기"
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: 200,
+                  objectFit: "contain",
+                  border: "1px solid #e0e0e0",
+                  borderRadius: 8
+                }}
+              />
+              {formData.thumbnail_delete_url ? (
+                <div style={{ marginTop: 8, fontSize: 13 }}>
+                  <a
+                    href={formData.thumbnail_delete_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: "#85c8f2" }}
+                  >
+                    imgBB에서 이 이미지 삭제 (새 탭)
+                  </a>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+          <div
+            style={{
+              display: "flex",
+              gap: 10,
+              alignItems: "center",
+              flexWrap: "wrap"
+            }}
+          >
+            <label
+              style={{
+                padding: "8px 16px",
+                background: thumbnailUploading ? "#ccc" : "#85c8f2",
+                color: "white",
+                borderRadius: 8,
+                cursor: thumbnailUploading ? "not-allowed" : "pointer",
+                fontSize: 14
+              }}
+            >
+              {thumbnailUploading ? "업로드 중..." : "이미지 업로드"}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleThumbnailFileChange}
+                disabled={thumbnailUploading}
+                style={{ display: "none" }}
+              />
+            </label>
+            <Style.ModalInput
+              type="url"
+              name="thumbnail"
+              value={formData.thumbnail || ""}
+              onChange={handleChange}
+              placeholder="또는 직접 링크 입력"
+              required
+              style={{ flex: 1, minWidth: 200 }}
+            />
+          </div>
+          {thumbnailError && (
+            <div style={{ color: "#dc3545", fontSize: 13, marginTop: 6 }}>
+              {thumbnailError}
+            </div>
+          )}
         </Style.ModalFormGroup>
 
         <Style.ModalFormGroup>
@@ -263,18 +398,25 @@ export default function PortfolioEditModal({
             </button>
           </label>
           {sublinkEntries.map((entry, index) => (
-            <div key={index} style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+            <div
+              key={index}
+              style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
+            >
               <Style.ModalInput
                 type="text"
                 placeholder="링크 이름 (예: 코드)"
                 value={entry.key}
-                onChange={e => handleSublinkChange(index, "key", e.target.value)}
+                onChange={e =>
+                  handleSublinkChange(index, "key", e.target.value)
+                }
                 style={{ flex: 1 }}
               />
               <Style.ModalInput
                 placeholder="URL"
                 value={entry.value}
-                onChange={e => handleSublinkChange(index, "value", e.target.value)}
+                onChange={e =>
+                  handleSublinkChange(index, "value", e.target.value)
+                }
                 style={{ flex: 2 }}
               />
               {sublinkEntries.length > 1 && (

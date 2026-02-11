@@ -6,7 +6,14 @@ export async function POST(req: Request) {
   try {
     const formData = await req.formData();
     const image = formData.get("image");
-    const name = formData.get("name") as string | null;
+    let name = formData.get("name") as string | null;
+    if (!name && image instanceof File && image.name) {
+      name = image.name;
+    }
+    // imgBB는 name에 확장자가 있으면 "cyland.jpg" → "cyland-jpg.jpg"처럼 중복 저장함. 확장자 제거 후 전달
+    if (name && name.includes(".")) {
+      name = name.replace(/\.[^.]+$/, "");
+    }
 
     if (!image) {
       return NextResponse.json(
@@ -26,14 +33,16 @@ export async function POST(req: Request) {
 
     // 이미지가 File 객체인 경우 base64로 변환
     let imageBase64: string;
-    
+
     if (image instanceof File) {
       const arrayBuffer = await image.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       imageBase64 = buffer.toString("base64");
     } else if (typeof image === "string") {
       // 이미 base64 문자열인 경우
-      imageBase64 = image.includes(",") ? image.split(",").pop() || image : image;
+      imageBase64 = image.includes(",")
+        ? image.split(",").pop() || image
+        : image;
     } else {
       return NextResponse.json(
         { error: "잘못된 이미지 형식입니다." },
@@ -72,17 +81,20 @@ export async function POST(req: Request) {
       );
     }
 
-    // 성공 시 이미지 URL 반환
+    // 성공 시 직접 링크(display_url)와 삭제 URL 반환
     return NextResponse.json({
       success: true,
-      url: data.data.url,
+      url: data.data.display_url ?? data.data.url,
       deleteUrl: data.data.delete_url,
       image: data.data.image
     });
   } catch (error) {
     console.error("이미지 업로드 오류:", error);
     return NextResponse.json(
-      { error: "서버 오류가 발생했습니다.", details: error instanceof Error ? error.message : String(error) },
+      {
+        error: "서버 오류가 발생했습니다.",
+        details: error instanceof Error ? error.message : String(error)
+      },
       { status: 500 }
     );
   }
