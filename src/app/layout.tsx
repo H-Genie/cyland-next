@@ -16,7 +16,7 @@ export const metadata: Metadata = {
       "프론트엔드 개발자 서형진의 포트폴리오입니다. 자바스크립트 기반의 풀스택 개발자를 목표로 끊임없이 노력중입니다",
     images: [
       {
-        url: "/images/og-iamge.jpg",
+        url: "/images/og-image.jpg",
         alt: "H-Genie.com open graph image"
       }
     ]
