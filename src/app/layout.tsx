@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.GOOGLE_VERIFICATION as string,
     other: {
-      naver: process.env.NAVER_VERIFICATION as string
+      "naver-site-verification": process.env.NAVER_VERIFICATION as string
     }
   }
 };
