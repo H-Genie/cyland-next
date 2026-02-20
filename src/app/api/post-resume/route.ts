@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { pool } from "utils/db";
+import { getAdminFromRequest } from "utils/auth";
 
 export async function POST(req: Request) {
+  const cookieStore = await cookies();
+  const admin = await getAdminFromRequest(req, cookieStore);
+  if (!admin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { content } = await req.json();
 
   if (content === undefined) {

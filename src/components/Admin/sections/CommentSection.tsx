@@ -3,7 +3,7 @@ import * as Style from "../Admin.styles";
 import SectionHeader from "../shared/SectionHeader";
 import DataTable, { TableColumn, TableAction } from "../shared/DataTable";
 import { useComment } from "../../../hooks/queries/useComment";
-import { useCommentDelete } from "../../../hooks/queries/useCommentDelete";
+import { useCommentDeleteAdmin } from "../../../hooks/queries/useCommentDeleteAdmin";
 import { useCommentToggleActive } from "../../../hooks/queries/useCommentToggleActive";
 
 export interface Comment {
@@ -16,7 +16,7 @@ export interface Comment {
 
 export default function CommentSection() {
   const { data: apiComments, isLoading, isError } = useComment();
-  const deleteCommentMutation = useCommentDelete();
+  const deleteCommentMutation = useCommentDeleteAdmin();
   const toggleActiveMutation = useCommentToggleActive();
   const [comments, setComments] = useState<Comment[]>([]);
 
@@ -37,22 +37,17 @@ export default function CommentSection() {
   };
 
   const handleDelete = async (comment: Comment) => {
-    if (window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
-      try {
-        // 관리자는 비밀번호 없이 삭제 가능
-        await deleteCommentMutation.mutateAsync({
-          id: comment.id
-        });
+    if (!window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) return;
+    try {
+      await deleteCommentMutation.mutateAsync({ id: comment.id });
 
-        // 삭제 성공 시 로컬 상태도 업데이트
-        const newComments = comments.filter(c => c.id !== comment.id);
-        setComments(newComments);
+      const newComments = comments.filter(c => c.id !== comment.id);
+      setComments(newComments);
 
-        alert("댓글이 성공적으로 삭제되었습니다.");
-      } catch (error) {
-        console.error("댓글 삭제 실패:", error);
-        alert("댓글 삭제에 실패했습니다.");
-      }
+      alert("댓글이 성공적으로 삭제되었습니다.");
+    } catch (error) {
+      console.error("댓글 삭제 실패:", error);
+      alert("댓글 삭제에 실패했습니다.");
     }
   };
 

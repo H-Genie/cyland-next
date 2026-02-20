@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { getAdminFromRequest } from "utils/auth";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  const cookieStore = await cookies();
+  const admin = await getAdminFromRequest(req, cookieStore);
+  if (!admin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const formData = await req.formData();
     const image = formData.get("image");
