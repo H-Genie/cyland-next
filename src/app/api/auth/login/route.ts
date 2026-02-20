@@ -1,3 +1,4 @@
+import { randomBytes } from "crypto";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { pool } from "utils/db";
@@ -54,12 +55,18 @@ export async function POST(req: Request) {
         );
       }
 
-      // 로그인 성공 - 쿠키에 인증 정보 저장
+      // 로그인 성공 - 새 api_key 생성 후 DB 저장, 쿠키에 저장
+      const apiKey = randomBytes(64).toString("hex");
+      await client.query(
+        "UPDATE admin SET api_key = $1 WHERE id = $2",
+        [apiKey, admin.id]
+      );
+
       const cookieStore = await cookies();
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + 7); // 7일 후 만료
 
-      cookieStore.set("admin_auth", "authenticated", {
+      cookieStore.set("admin_auth", apiKey, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",

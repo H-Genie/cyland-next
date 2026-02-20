@@ -82,7 +82,7 @@ export default function LoginPage() {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const callbackUrl = params.get("callbackUrl") || "/admin";
-      
+
       // 이미 로그인되어 있는지 확인
       checkAuth(callbackUrl);
     }
@@ -92,7 +92,7 @@ export default function LoginPage() {
     try {
       const response = await fetch("/api/auth/check");
       const data = await response.json();
-      
+
       if (data.authenticated) {
         router.push(callbackUrl);
       }
@@ -146,7 +146,7 @@ export default function LoginPage() {
             type="text"
             placeholder="사용자명"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={e => setUsername(e.target.value)}
             required
             disabled={loading}
           />
@@ -154,7 +154,7 @@ export default function LoginPage() {
             type="password"
             placeholder="비밀번호"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             required
             disabled={loading}
           />

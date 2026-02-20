@@ -1,13 +1,23 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { pool } from "utils/db";
 
 export const dynamic = "force-dynamic";
 
 export async function POST() {
   try {
     const cookieStore = await cookies();
+    const apiKey = cookieStore.get("admin_auth")?.value;
 
-    // 쿠키 삭제
+    if (apiKey) {
+      const client = await pool.connect();
+      try {
+        await client.query("UPDATE admin SET api_key = NULL WHERE api_key = $1", [apiKey]);
+      } finally {
+        client.release();
+      }
+    }
+
     cookieStore.delete("admin_auth");
     cookieStore.delete("admin_username");
 

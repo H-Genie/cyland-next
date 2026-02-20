@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import AdminPage from "components/Admin";
+import { getAdminByApiKey } from "utils/auth";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -10,10 +11,12 @@ export const metadata: Metadata = {
 
 export default async function Admin() {
   const cookieStore = await cookies();
-  const authCookie = cookieStore.get("admin_auth");
+  const apiKey = cookieStore.get("admin_auth")?.value;
+  const admin = await getAdminByApiKey(apiKey);
 
-  // 인증되지 않은 경우 로그인 페이지로 리다이렉트
-  if (!authCookie || authCookie.value !== "authenticated") {
+  if (!admin) {
+    cookieStore.delete("admin_auth");
+    cookieStore.delete("admin_username");
     redirect("/admin/login?callbackUrl=/admin");
   }
 

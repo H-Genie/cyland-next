@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { decryptAES } from "utils/crypto";
 import { pool } from "utils/db";
+import { getAdminByApiKey } from "utils/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -12,10 +13,19 @@ export async function DELETE(req: Request) {
     return NextResponse.json("Invalid request", { status: 400 });
   }
 
-  // 관리자 인증 확인
   const cookieStore = await cookies();
-  const authCookie = cookieStore.get("admin_auth");
-  const isAdmin = authCookie?.value === "authenticated";
+  const apiKey = cookieStore.get("admin_auth")?.value;
+  const admin = await getAdminByApiKey(apiKey);
+  const isAdmin = !!admin;
+
+  if (apiKey && !admin) {
+    cookieStore.delete("admin_auth");
+    cookieStore.delete("admin_username");
+  }
+
+  if (!isAdmin && !password) {
+    return NextResponse.json("Password required", { status: 400 });
+  }
 
   const client = await pool.connect();
   try {
