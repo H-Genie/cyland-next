@@ -26,6 +26,7 @@ export default function PortfolioEditModal({
     link: "",
     thumbnail: "",
     thumbnail_delete_url: "",
+    order: undefined,
     classification: "1",
     language: "",
     description: "",
@@ -49,6 +50,7 @@ export default function PortfolioEditModal({
         link: "",
         thumbnail: "",
         thumbnail_delete_url: "",
+        order: undefined,
         classification: "1",
         language: "",
         description: "",
@@ -66,6 +68,7 @@ export default function PortfolioEditModal({
         link: portfolio.link ?? "",
         thumbnail: portfolio.thumbnail ?? "",
         thumbnail_delete_url: portfolio.thumbnail_delete_url ?? "",
+        order: portfolio.order != null ? Number(portfolio.order) : undefined,
         classification: portfolio.classification ?? "1",
         language: portfolio.language ?? "",
         description: portfolio.description ?? "",
@@ -161,7 +164,8 @@ export default function PortfolioEditModal({
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]:
+        name === "order" ? (value === "" ? undefined : Number(value)) : value
     }));
   };
 
@@ -437,6 +441,22 @@ export default function PortfolioEditModal({
               )}
             </div>
           ))}
+        </Style.ModalFormGroup>
+
+        <Style.ModalFormGroup>
+          <label>순서</label>
+          <Style.ModalInput
+            type="number"
+            name="order"
+            value={
+              formData.order !== undefined && formData.order !== null
+                ? formData.order
+                : ""
+            }
+            onChange={handleChange}
+            placeholder="클수록 앞에 표시"
+            min={0}
+          />
         </Style.ModalFormGroup>
 
         <Style.ModalButtonGroup>

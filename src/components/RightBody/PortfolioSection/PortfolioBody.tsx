@@ -16,7 +16,10 @@ export default function PortfolioBody() {
   const getClassificationCount = (classification: number) => {
     if (!data || !Array.isArray(data)) return 0;
     return data.filter((item: Portfolio) => {
-      return item.classification === classification.toString() && item.active !== false;
+      return (
+        item.classification === classification.toString() &&
+        item.active !== false
+      );
     }).length;
   };
 
@@ -51,13 +54,21 @@ export default function PortfolioBody() {
           <>
             <p>{getProjectSummary()}</p>
             <br />
-            <MakePortfolioCarousel portfolioData={data?.filter((item: Portfolio) => item.active !== false)} />
+            <MakePortfolioCarousel
+              portfolioData={data?.filter(
+                (item: Portfolio) => item.active !== false
+              )}
+            />
           </>
         }
         notice={true}
       />
       {data
         ?.filter((item: Portfolio) => item.active !== false)
+        .sort(
+          (a: Portfolio, b: Portfolio) =>
+            (b.order ?? -1) - (a.order ?? -1)
+        )
         .map((visitor: Portfolio, index: number) => (
           <Visitor
             key={index + 1}

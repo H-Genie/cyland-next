@@ -13,4 +13,5 @@ export interface Portfolio {
   };
   active?: boolean;
   classification_label: string;
+  order: number;
 }

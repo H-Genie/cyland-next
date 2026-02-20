@@ -17,14 +17,14 @@ export default function PortfolioSelect() {
   return (
     <Select onChange={onChange}>
       <option value="">포트폴리오 파도타기</option>
-      {data.map(
-        (item: Portfolio) =>
-          item.name !== "Cyland" && (
-            <option key={item.name} value={item.link}>
-              {item.name}
-            </option>
-          )
-      )}
+      {(data ?? [])
+        .filter((item: Portfolio) => item.active && item.name !== "Cyland")
+        .sort((a: Portfolio, b: Portfolio) => (b.order ?? -1) - (a.order ?? -1))
+        .map((item: Portfolio) => (
+          <option key={item.name} value={item.link}>
+            {item.name}
+          </option>
+        ))}
     </Select>
   );
 }

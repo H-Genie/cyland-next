@@ -8,7 +8,9 @@ export default function MakePortfolioCarousel({
 }: {
   portfolioData: Portfolio[];
 }) {
-  const sliderContents = portfolioData.map(item => (
+  const sliderContents = [...portfolioData]
+    .sort((a, b) => (b.order ?? -1) - (a.order ?? -1))
+    .map(item => (
     <div key={item.name}>
       <Image src={item.thumbnail} alt={item.name} width={400} height={225} />
     </div>
