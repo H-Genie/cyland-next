@@ -5,7 +5,7 @@
   "scripts": {
     "start": "next start",
     "dev": "next dev",
-    "build": "node scripts/postbuild.js && next build",
+    "build": "node scripts/postbuild.js && node scripts/generate-openapi.js && next build",
     "prettier": "prettier --write ."
   },
   "dependencies": {

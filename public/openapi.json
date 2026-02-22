@@ -1,0 +1,1284 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cyland API",
+    "version": "1.0.0",
+    "description": "Next.js App Router 기반 API 문서"
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Portfolio",
+      "description": "포트폴리오 API"
+    },
+    {
+      "name": "Story",
+      "description": "스토리 API"
+    },
+    {
+      "name": "Resume",
+      "description": "이력서 API"
+    },
+    {
+      "name": "Comment",
+      "description": "댓글 API"
+    },
+    {
+      "name": "Upload",
+      "description": "이미지 업로드"
+    },
+    {
+      "name": "Auth",
+      "description": "관리자 인증"
+    }
+  ],
+  "paths": {
+    "/api/auth/check": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "관리자 인증 상태 확인",
+        "description": "쿠키(admin_auth)로 로그인 여부 확인.",
+        "responses": {
+          "200": {
+            "description": "인증 결과",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "authenticated": {
+                      "type": "boolean"
+                    },
+                    "username": {
+                      "type": "string",
+                      "description": "인증 시에만 존재"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "확인 중 오류 (authenticated: false 반환)"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "관리자 로그인",
+        "description": "username, password(암호화)로 로그인. 성공 시 쿠키(admin_auth, admin_username) 설정.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "username",
+                  "password"
+                ],
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "AES 암호화된 비밀번호"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "로그인 성공 (success, username)"
+          },
+          "400": {
+            "description": "사용자명/비밀번호 미입력"
+          },
+          "401": {
+            "description": "사용자명 또는 비밀번호 불일치"
+          },
+          "500": {
+            "description": "인증 중 오류"
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "관리자 로그아웃",
+        "description": "쿠키(admin_auth, admin_username) 삭제 및 DB api_key 무효화.",
+        "responses": {
+          "200": {
+            "description": "로그아웃 성공 (success: true)"
+          },
+          "500": {
+            "description": "로그아웃 중 오류"
+          }
+        }
+      }
+    },
+    "/api/delete-comment-admin": {
+      "delete": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "댓글 삭제 (관리자)",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "성공 (true)"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "404": {
+            "description": "Comment not found"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/delete-comment": {
+      "delete": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "댓글 삭제 (본인)",
+        "description": "password(암호화)로 본인 확인 후 삭제.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "password"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "AES 암호화된 비밀번호"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "성공 (true)"
+          },
+          "400": {
+            "description": "Password required"
+          },
+          "401": {
+            "description": "Invalid password"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/delete-portfolio": {
+      "delete": {
+        "tags": [
+          "Portfolio"
+        ],
+        "summary": "포트폴리오 삭제",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "삭제된 id"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "404": {
+            "description": "Portfolio not found"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/delete-resume": {
+      "delete": {
+        "tags": [
+          "Resume"
+        ],
+        "summary": "이력서 삭제",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "삭제된 id"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "404": {
+            "description": "Resume not found"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/delete-story": {
+      "delete": {
+        "tags": [
+          "Story"
+        ],
+        "summary": "스토리 삭제",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "삭제된 id"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "404": {
+            "description": "Story not found"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/get-comment": {
+      "get": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "댓글 목록 조회",
+        "description": "DB에서 댓글 목록을 조회합니다.",
+        "responses": {
+          "200": {
+            "description": "댓글 배열",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "comment": {
+                        "type": "string"
+                      },
+                      "nickname": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "active": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/get-portfolio": {
+      "get": {
+        "tags": [
+          "Portfolio"
+        ],
+        "summary": "포트폴리오 목록 조회",
+        "description": "DB에서 포트폴리오 목록을 조회합니다.",
+        "responses": {
+          "200": {
+            "description": "포트폴리오 배열",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "link": {
+                        "type": "string"
+                      },
+                      "thumbnail": {
+                        "type": "string"
+                      },
+                      "classification": {
+                        "type": "string"
+                      },
+                      "language": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "active": {
+                        "type": "boolean"
+                      },
+                      "order": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/get-resume": {
+      "get": {
+        "tags": [
+          "Resume"
+        ],
+        "summary": "이력서 목록 조회",
+        "description": "DB에서 이력서 목록을 조회합니다.",
+        "responses": {
+          "200": {
+            "description": "이력서 배열",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "active": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/get-story": {
+      "get": {
+        "tags": [
+          "Story"
+        ],
+        "summary": "스토리 목록 조회",
+        "description": "DB에서 스토리 목록을 조회합니다.",
+        "responses": {
+          "200": {
+            "description": "스토리 배열",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "active": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/post-comment": {
+      "post": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "댓글 작성",
+        "description": "comment, nickname, password(암호화) 필수.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "comment",
+                  "nickname",
+                  "password"
+                ],
+                "properties": {
+                  "comment": {
+                    "type": "string"
+                  },
+                  "nickname": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "AES 암호화된 비밀번호"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "성공 (true)"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/post-portfolio": {
+      "post": {
+        "tags": [
+          "Portfolio"
+        ],
+        "summary": "포트폴리오 생성",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "link",
+                  "thumbnail"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "link": {
+                    "type": "string"
+                  },
+                  "thumbnail": {
+                    "type": "string"
+                  },
+                  "thumbnail_delete_url": {
+                    "type": "string"
+                  },
+                  "order": {
+                    "type": "integer"
+                  },
+                  "classification": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "study": {
+                    "type": "string"
+                  },
+                  "range": {
+                    "type": "string"
+                  },
+                  "sublink": {
+                    "type": "object"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "생성된 포트폴리오"
+          },
+          "400": {
+            "description": "Invalid request (name, link, thumbnail 필수)"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/post-resume": {
+      "post": {
+        "tags": [
+          "Resume"
+        ],
+        "summary": "이력서 생성",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "생성된 이력서 (id, content, active)"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/post-story": {
+      "post": {
+        "tags": [
+          "Story"
+        ],
+        "summary": "스토리 생성",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "생성된 스토리 (id, content, active)"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/put-comment-active": {
+      "put": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "댓글 노출 여부 변경",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "active"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "변경된 id, active"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "404": {
+            "description": "Comment not found"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/put-comment": {
+      "put": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "댓글 수정",
+        "description": "본인 댓글만 수정 가능. password(암호화)로 본인 확인.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "comment",
+                  "nickname",
+                  "password"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "comment": {
+                    "type": "string"
+                  },
+                  "nickname": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "AES 암호화된 비밀번호"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "수정된 id, comment, nickname"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid password"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/put-portfolio-active": {
+      "put": {
+        "tags": [
+          "Portfolio"
+        ],
+        "summary": "포트폴리오 노출 여부 변경",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "active"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "변경된 id, active"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "404": {
+            "description": "Portfolio not found"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/put-portfolio": {
+      "put": {
+        "tags": [
+          "Portfolio"
+        ],
+        "summary": "포트폴리오 수정",
+        "description": "관리자 인증 필요. id, name, link, thumbnail 필수.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "name",
+                  "link",
+                  "thumbnail"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "link": {
+                    "type": "string"
+                  },
+                  "thumbnail": {
+                    "type": "string"
+                  },
+                  "thumbnail_delete_url": {
+                    "type": "string"
+                  },
+                  "order": {
+                    "type": "integer"
+                  },
+                  "classification": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "study": {
+                    "type": "string"
+                  },
+                  "range": {
+                    "type": "string"
+                  },
+                  "sublink": {
+                    "type": "object"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "수정된 포트폴리오"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "404": {
+            "description": "Portfolio not found"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/put-resume-active": {
+      "put": {
+        "tags": [
+          "Resume"
+        ],
+        "summary": "이력서 노출 여부 변경",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "active"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "변경된 id, active"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "404": {
+            "description": "Resume not found"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/put-resume": {
+      "put": {
+        "tags": [
+          "Resume"
+        ],
+        "summary": "이력서 수정",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "content"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "수정된 id, content"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "404": {
+            "description": "Resume not found"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/put-story-active": {
+      "put": {
+        "tags": [
+          "Story"
+        ],
+        "summary": "스토리 노출 여부 변경",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "active"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "변경된 id, active"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "404": {
+            "description": "Story not found"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/put-story": {
+      "put": {
+        "tags": [
+          "Story"
+        ],
+        "summary": "스토리 수정",
+        "description": "관리자 인증 필요.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "content"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "수정된 id, content"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "404": {
+            "description": "Story not found"
+          },
+          "500": {
+            "description": "서버 에러"
+          }
+        }
+      }
+    },
+    "/api/upload-image": {
+      "post": {
+        "tags": [
+          "Upload"
+        ],
+        "summary": "이미지 업로드",
+        "description": "관리자 인증 필요. FormData(image, name)로 imgBB에 업로드 후 URL 반환.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "업로드 성공 (url, deleteUrl, image)"
+          },
+          "400": {
+            "description": "이미지 미제공 또는 잘못된 형식"
+          },
+          "401": {
+            "description": "인증 필요"
+          },
+          "500": {
+            "description": "서버 또는 ImgBB API 에러"
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}
