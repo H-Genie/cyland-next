@@ -3,6 +3,36 @@ import { pool } from "utils/db";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/get-portfolio:
+ *   get:
+ *     tags:
+ *       - Portfolio
+ *     summary: 포트폴리오 목록 조회
+ *     description: DB에서 포트폴리오 목록을 조회합니다.
+ *     responses:
+ *       200:
+ *         description: 포트폴리오 배열
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id: { type: string }
+ *                   name: { type: string }
+ *                   link: { type: string }
+ *                   thumbnail: { type: string }
+ *                   classification: { type: string }
+ *                   language: { type: string }
+ *                   description: { type: string }
+ *                   active: { type: boolean }
+ *                   order: { type: number }
+ *       500:
+ *         description: 서버 에러
+ */
 export async function GET() {
   const client = await pool.connect();
   try {

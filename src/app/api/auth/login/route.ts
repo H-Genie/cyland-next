@@ -6,6 +6,34 @@ import { decryptAES } from "utils/crypto";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: 관리자 로그인
+ *     description: username, password(암호화)로 로그인. 성공 시 쿠키(admin_auth, admin_username) 설정.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [username, password]
+ *             properties:
+ *               username: { type: "string" }
+ *               password: { type: "string", description: "AES 암호화된 비밀번호" }
+ *     responses:
+ *       200:
+ *         description: 로그인 성공 (success, username)
+ *       400:
+ *         description: 사용자명/비밀번호 미입력
+ *       401:
+ *         description: 사용자명 또는 비밀번호 불일치
+ *       500:
+ *         description: 인증 중 오류
+ */
 export async function POST(req: Request) {
   try {
     const { username, password } = await req.json();

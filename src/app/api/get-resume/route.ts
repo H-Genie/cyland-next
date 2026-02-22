@@ -3,6 +3,30 @@ import { pool } from "utils/db";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/get-resume:
+ *   get:
+ *     tags:
+ *       - Resume
+ *     summary: 이력서 목록 조회
+ *     description: DB에서 이력서 목록을 조회합니다.
+ *     responses:
+ *       200:
+ *         description: 이력서 배열
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id: { type: "integer" }
+ *                   content: { type: "string" }
+ *                   active: { type: "boolean" }
+ *       500:
+ *         description: 서버 에러
+ */
 export async function GET() {
   const client = await pool.connect();
   try {

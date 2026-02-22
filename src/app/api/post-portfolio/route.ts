@@ -5,6 +5,46 @@ import { getAdminFromRequest } from "utils/auth";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/post-portfolio:
+ *   post:
+ *     tags:
+ *       - Portfolio
+ *     summary: 포트폴리오 생성
+ *     description: 관리자 인증 필요.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [name, link, thumbnail]
+ *             properties:
+ *               name: { type: "string" }
+ *               link: { type: "string" }
+ *               thumbnail: { type: "string" }
+ *               thumbnail_delete_url: { type: "string" }
+ *               order: { type: "integer" }
+ *               classification: { type: "string" }
+ *               language: { type: "string" }
+ *               description: { type: "string" }
+ *               study: { type: "string" }
+ *               range: { type: "string" }
+ *               sublink: { type: "object" }
+ *               active: { type: "boolean" }
+ *     responses:
+ *       200:
+ *         description: 생성된 포트폴리오
+ *       400:
+ *         description: Invalid request (name, link, thumbnail 필수)
+ *       401:
+ *         description: 인증 필요
+ *       500:
+ *         description: 서버 에러
+ */
 export async function POST(req: Request) {
   const cookieStore = await cookies();
   const admin = await getAdminFromRequest(req, cookieStore);

@@ -5,6 +5,38 @@ import { getAdminFromRequest } from "utils/auth";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/put-resume-active:
+ *   put:
+ *     tags:
+ *       - Resume
+ *     summary: 이력서 노출 여부 변경
+ *     description: 관리자 인증 필요.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [id, active]
+ *             properties:
+ *               id: { type: "integer" }
+ *               active: { type: "boolean" }
+ *     responses:
+ *       200:
+ *         description: 변경된 id, active
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: 인증 필요
+ *       404:
+ *         description: Resume not found
+ *       500:
+ *         description: 서버 에러
+ */
 export async function PUT(req: Request) {
   const cookieStore = await cookies();
   const admin = await getAdminFromRequest(req, cookieStore);

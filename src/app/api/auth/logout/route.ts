@@ -4,6 +4,20 @@ import { pool } from "utils/db";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: 관리자 로그아웃
+ *     description: 쿠키(admin_auth, admin_username) 삭제 및 DB api_key 무효화.
+ *     responses:
+ *       200:
+ *         description: "로그아웃 성공 (success: true)"
+ *       500:
+ *         description: 로그아웃 중 오류
+ */
 export async function POST() {
   try {
     const cookieStore = await cookies();

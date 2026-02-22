@@ -4,6 +4,35 @@ import { getAdminFromRequest } from "utils/auth";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/upload-image:
+ *   post:
+ *     tags:
+ *       - Upload
+ *     summary: 이미지 업로드
+ *     description: 관리자 인증 필요. FormData(image, name)로 imgBB에 업로드 후 URL 반환.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image: { type: "string", format: "binary" }
+ *               name: { type: "string" }
+ *     responses:
+ *       200:
+ *         description: 업로드 성공 (url, deleteUrl, image)
+ *       400:
+ *         description: 이미지 미제공 또는 잘못된 형식
+ *       401:
+ *         description: 인증 필요
+ *       500:
+ *         description: 서버 또는 ImgBB API 에러
+ */
 export async function POST(req: Request) {
   const cookieStore = await cookies();
   const admin = await getAdminFromRequest(req, cookieStore);

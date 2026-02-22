@@ -5,6 +5,37 @@ import { getAdminFromRequest } from "utils/auth";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/delete-story:
+ *   delete:
+ *     tags:
+ *       - Story
+ *     summary: 스토리 삭제
+ *     description: 관리자 인증 필요.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [id]
+ *             properties:
+ *               id: { type: "integer" }
+ *     responses:
+ *       200:
+ *         description: 삭제된 id
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: 인증 필요
+ *       404:
+ *         description: Story not found
+ *       500:
+ *         description: 서버 에러
+ */
 export async function DELETE(req: Request) {
   const cookieStore = await cookies();
   const admin = await getAdminFromRequest(req, cookieStore);

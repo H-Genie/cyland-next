@@ -4,6 +4,34 @@ import { pool } from "utils/db";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/delete-comment:
+ *   delete:
+ *     tags:
+ *       - Comment
+ *     summary: 댓글 삭제 (본인)
+ *     description: password(암호화)로 본인 확인 후 삭제.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [id, password]
+ *             properties:
+ *               id: { type: "integer" }
+ *               password: { type: "string", description: "AES 암호화된 비밀번호" }
+ *     responses:
+ *       200:
+ *         description: 성공 (true)
+ *       400:
+ *         description: Password required
+ *       401:
+ *         description: Invalid password
+ *       500:
+ *         description: 서버 에러
+ */
 export async function DELETE(req: Request) {
   const { id, password } = await req.json();
 

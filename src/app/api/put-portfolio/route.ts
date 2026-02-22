@@ -5,6 +5,49 @@ import { getAdminFromRequest } from "utils/auth";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/put-portfolio:
+ *   put:
+ *     tags:
+ *       - Portfolio
+ *     summary: 포트폴리오 수정
+ *     description: 관리자 인증 필요. id, name, link, thumbnail 필수.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [id, name, link, thumbnail]
+ *             properties:
+ *               id: { type: "integer" }
+ *               name: { type: "string" }
+ *               link: { type: "string" }
+ *               thumbnail: { type: "string" }
+ *               thumbnail_delete_url: { type: "string" }
+ *               order: { type: "integer" }
+ *               classification: { type: "string" }
+ *               language: { type: "string" }
+ *               description: { type: "string" }
+ *               study: { type: "string" }
+ *               range: { type: "string" }
+ *               sublink: { type: "object" }
+ *               active: { type: "boolean" }
+ *     responses:
+ *       200:
+ *         description: 수정된 포트폴리오
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: 인증 필요
+ *       404:
+ *         description: Portfolio not found
+ *       500:
+ *         description: 서버 에러
+ */
 export async function PUT(req: Request) {
   const cookieStore = await cookies();
   const admin = await getAdminFromRequest(req, cookieStore);

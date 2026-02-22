@@ -2,6 +2,36 @@ import { NextResponse } from "next/server";
 import { decryptAES } from "utils/crypto";
 import { pool } from "utils/db";
 
+/**
+ * @swagger
+ * /api/put-comment:
+ *   put:
+ *     tags:
+ *       - Comment
+ *     summary: 댓글 수정
+ *     description: 본인 댓글만 수정 가능. password(암호화)로 본인 확인.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [id, comment, nickname, password]
+ *             properties:
+ *               id: { type: "integer" }
+ *               comment: { type: "string" }
+ *               nickname: { type: "string" }
+ *               password: { type: "string", description: "AES 암호화된 비밀번호" }
+ *     responses:
+ *       200:
+ *         description: 수정된 id, comment, nickname
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Invalid password
+ *       500:
+ *         description: 서버 에러
+ */
 export async function PUT(req: Request) {
   const { id, comment, nickname, password } = await req.json();
 

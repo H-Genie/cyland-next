@@ -5,6 +5,37 @@ import { getAdminFromRequest } from "utils/auth";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/delete-comment-admin:
+ *   delete:
+ *     tags:
+ *       - Comment
+ *     summary: 댓글 삭제 (관리자)
+ *     description: 관리자 인증 필요.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [id]
+ *             properties:
+ *               id: { type: "integer" }
+ *     responses:
+ *       200:
+ *         description: 성공 (true)
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: 인증 필요
+ *       404:
+ *         description: Comment not found
+ *       500:
+ *         description: 서버 에러
+ */
 export async function DELETE(req: Request) {
   const cookieStore = await cookies();
   const admin = await getAdminFromRequest(req, cookieStore);

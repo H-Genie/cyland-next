@@ -3,6 +3,38 @@ import { cookies } from "next/headers";
 import { pool } from "utils/db";
 import { getAdminFromRequest } from "utils/auth";
 
+/**
+ * @swagger
+ * /api/put-story:
+ *   put:
+ *     tags:
+ *       - Story
+ *     summary: 스토리 수정
+ *     description: 관리자 인증 필요.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [id, content]
+ *             properties:
+ *               id: { type: "integer" }
+ *               content: { type: "string" }
+ *     responses:
+ *       200:
+ *         description: 수정된 id, content
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: 인증 필요
+ *       404:
+ *         description: Story not found
+ *       500:
+ *         description: 서버 에러
+ */
 export async function PUT(req: Request) {
   const cookieStore = await cookies();
   const admin = await getAdminFromRequest(req, cookieStore);

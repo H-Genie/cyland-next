@@ -3,6 +3,32 @@ import { pool } from "utils/db";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * @swagger
+ * /api/get-comment:
+ *   get:
+ *     tags:
+ *       - Comment
+ *     summary: 댓글 목록 조회
+ *     description: DB에서 댓글 목록을 조회합니다.
+ *     responses:
+ *       200:
+ *         description: 댓글 배열
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id: { type: "integer" }
+ *                   comment: { type: "string" }
+ *                   nickname: { type: "string" }
+ *                   created_at: { type: "string", format: "date-time" }
+ *                   active: { type: "boolean" }
+ *       500:
+ *         description: 서버 에러
+ */
 export async function GET() {
   const client = await pool.connect();
   try {
