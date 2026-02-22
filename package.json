@@ -5,7 +5,7 @@
   "scripts": {
     "start": "next start",
     "dev": "next dev",
-    "build": "next build && node scripts/postbuild.js",
+    "build": "node scripts/postbuild.js && next build",
     "prettier": "prettier --write ."
   },
   "dependencies": {
