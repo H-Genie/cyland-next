@@ -56,6 +56,10 @@ export default function StorySection({
   };
 
   const handleSave = async (storyData: Story) => {
+    if (!storyData.name?.trim()) {
+      alert("이름은 필수입니다.");
+      return;
+    }
     if (!storyData.content) {
       alert("내용은 필수입니다.");
       return;
@@ -63,8 +67,8 @@ export default function StorySection({
 
     try {
       if (isNewStory) {
-        // 새로 추가
         const newStory = await createStoryMutation.mutateAsync({
+          name: storyData.name,
           content: storyData.content
         });
 
@@ -83,6 +87,7 @@ export default function StorySection({
 
         await updateStoryMutation.mutateAsync({
           id: storyData.id,
+          name: storyData.name,
           content: storyData.content
         });
 

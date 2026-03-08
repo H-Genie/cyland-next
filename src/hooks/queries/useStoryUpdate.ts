@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface UpdateStoryParams {
   id: number;
+  name: string;
   content: string;
 }
 

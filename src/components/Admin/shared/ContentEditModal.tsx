@@ -6,6 +6,7 @@ ReactModal.setAppElement("body");
 
 interface ContentItem {
   id?: number;
+  name?: string;
   content?: string;
   [key: string]: any;
 }
@@ -29,20 +30,21 @@ export default function ContentEditModal({
 }: ContentEditModalProps) {
   const [formData, setFormData] = useState<ContentItem>({
     id: 0,
+    name: "",
     content: ""
   });
 
   useEffect(() => {
     if (isNew) {
-      // 새로 추가하는 경우 빈 폼으로 초기화
       setFormData({
         id: 0,
+        name: "",
         content: ""
       });
     } else if (item) {
-      // 수정하는 경우 기존 데이터로 초기화
       setFormData({
         id: item.id ?? 0,
+        name: item.name ?? "",
         content: item.content ?? ""
       });
     }
@@ -93,6 +95,16 @@ export default function ContentEditModal({
         </button>
       </Style.ModalHeader>
       <form onSubmit={handleSubmit}>
+        <Style.ModalFormGroup>
+          <label>이름</label>
+          <Style.ModalInput
+            name="name"
+            value={formData.name || ""}
+            onChange={handleChange}
+            placeholder="이름을 입력하세요"
+            required
+          />
+        </Style.ModalFormGroup>
         <Style.ModalFormGroup>
           <label>내용</label>
           <Style.ModalTextarea

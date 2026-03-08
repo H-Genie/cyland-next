@@ -19,12 +19,13 @@ import { getAdminFromRequest } from "utils/auth";
  *         application/json:
  *           schema:
  *             type: object
- *             required: [content]
+ *             required: [name, content]
  *             properties:
+ *               name: { type: "string", description: "스토리 이름" }
  *               content: { type: "string" }
  *     responses:
  *       200:
- *         description: 생성된 스토리 (id, content, active)
+ *         description: 생성된 스토리 (id, name, content, active)
  *       400:
  *         description: Invalid request
  *       401:
@@ -39,21 +40,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { content } = await req.json();
+  const { name, content } = await req.json();
 
-  if (content === undefined) {
+  if (name === undefined || content === undefined) {
     return NextResponse.json("Invalid request", { status: 400 });
   }
 
   const client = await pool.connect();
   try {
     const { rows } = await client.query(
-      `INSERT INTO story (content, active) VALUES ($1, true) RETURNING id, content, active`,
-      [content]
+      `INSERT INTO story (name, content, active) VALUES ($1, $2, true) RETURNING id, name, content, active`,
+      [name ?? "", content]
     );
 
     return NextResponse.json({
       id: rows[0].id,
+      name: rows[0].name,
       content: rows[0].content,
       active: rows[0].active
     });

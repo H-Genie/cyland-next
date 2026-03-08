@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface CreateStoryParams {
+  name: string;
   content: string;
 }
 

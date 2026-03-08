@@ -534,6 +534,10 @@
                       "id": {
                         "type": "integer"
                       },
+                      "name": {
+                        "type": "string",
+                        "description": "스토리 이름"
+                      },
                       "content": {
                         "type": "string"
                       },
@@ -745,9 +749,14 @@
               "schema": {
                 "type": "object",
                 "required": [
+                  "name",
                   "content"
                 ],
                 "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "스토리 이름"
+                  },
                   "content": {
                     "type": "string"
                   }
@@ -758,7 +767,7 @@
         },
         "responses": {
           "200": {
-            "description": "생성된 스토리 (id, content, active)"
+            "description": "생성된 스토리 (id, name, content, active)"
           },
           "400": {
             "description": "Invalid request"
@@ -1199,11 +1208,16 @@
                 "type": "object",
                 "required": [
                   "id",
+                  "name",
                   "content"
                 ],
                 "properties": {
                   "id": {
                     "type": "integer"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "스토리 이름"
                   },
                   "content": {
                     "type": "string"
@@ -1215,7 +1229,7 @@
         },
         "responses": {
           "200": {
-            "description": "수정된 id, content"
+            "description": "수정된 id, name, content"
           },
           "400": {
             "description": "Invalid request"

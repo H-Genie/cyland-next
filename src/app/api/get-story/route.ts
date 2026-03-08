@@ -22,6 +22,7 @@ export const dynamic = "force-dynamic";
  *                 type: object
  *                 properties:
  *                   id: { type: "integer" }
+ *                   name: { type: "string", description: "스토리 이름" }
  *                   content: { type: "string" }
  *                   active: { type: "boolean" }
  *       500:
